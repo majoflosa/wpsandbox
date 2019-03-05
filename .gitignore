@@ -1,5 +1,7 @@
 uploads
 themes/twenty*
+themes/review-guide
 plugins/akismet
 plugins/hello.php
 plugins/index.php
+plugins/wordpress-importer

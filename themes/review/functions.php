@@ -54,6 +54,10 @@ add_action( 'widgets_init', 'rev_widget_areas_init' );
  * Scripts and styles
  */
 function review_scripts() {
-    wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), '0.0.1' );
+    $loadInFooter = true; // true by default
+    $version = $_SERVER['DOCUMENT_ROOT'] === '/Applications/MAMP/htdocs' ? time() : '0.0.1';
+    
+    wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );
+    // wp_enqueue_script( 'unique-handle', get_stylesheet_directory_uri, array(), $version, $loadInFooter );
 }
 add_action( 'wp_enqueue_scripts', 'review_scripts' );

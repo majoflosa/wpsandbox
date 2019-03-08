@@ -6,13 +6,30 @@
     color: #ffffff
     padding: 0 10px
 
-.site-nav
+    a
+        color: inherit
+        text-decoration: none
+
+    &__title
+        display: flex
+        align-items: center
+
+    &__logo-wrap
+        margin-right: 8px
+        img
+            height: 40px
+            width: auto
+            display: block
+
+
+.site-header__nav
+    .responsive-nav-toggle
+        display: none
 
     &-links
         list-style: none
         display: flex
     
         a
-            color: inherit
             display: inline-block
             margin: 0 10px

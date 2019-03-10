@@ -12,7 +12,7 @@
             <span class="site-header__logo-wrap">
                 <?php if ( has_custom_logo() ) the_custom_logo(); ?>
             </span>
-            <a class="site-header__title-link href="<?php echo esc_url( home_url('/') ); ?>">
+            <a class="site-header__title-link" href="<?php echo esc_url( home_url('/') ); ?>">
                 <?php bloginfo( 'name' ); ?>
             </a>
         </h1>

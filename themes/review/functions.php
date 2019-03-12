@@ -61,3 +61,10 @@ function review_scripts() {
     // wp_enqueue_script( 'unique-handle', get_stylesheet_directory_uri, array(), $version, $loadInFooter );
 }
 add_action( 'wp_enqueue_scripts', 'review_scripts' );
+
+
+// Filters
+function someFilterCallback( $string, $arg1 ) {
+    return "{$arg1} - {$string}";
+}
+add_filter( 'mjf_filter_excerpt', 'someFilterCallback', 10, 2 );

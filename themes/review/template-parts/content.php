@@ -8,8 +8,19 @@
     <main class="entry__body">
         
         <?php
-            if ( is_singular() ) the_content(); 
-            else the_excerpt();
+            if ( is_singular() ) {
+                the_content(); 
+            } 
+            else {
+                // mjf_filter_excerpt defined in functions.php
+                $filtered_excerpt = apply_filters( 
+                    'mjf_filter_excerpt', 
+                    get_the_excerpt(), // 1st arg in filter callback
+                    '[Testing filter] ' // 2nd arg in filter callback
+                );
+                echo $filtered_excerpt;
+                // the_excerpt();
+            } 
         ?>
     </main>
     <footer class="entry__footer">

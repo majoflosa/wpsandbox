@@ -1,0 +1,26 @@
+.appearance_page_mjf_theme_options .wrap h2 {
+	text-transform: uppercase;
+}
+
+.appearance_page_mjf_theme_options .wrap h3 {
+
+}
+
+.appearance_page_mjf_theme_options table.form-table {
+	background-color: #fff;
+}
+
+.appearance_page_mjf_theme_options table.form-table tr {
+	border-top: 4px solid #f1f1f1;
+}
+
+.appearance_page_mjf_theme_options table.form-table th {
+	padding-left: 18px;
+}
+
+
+span.description {
+	display: block;
+	color: #888;
+	padding: 10px 0;
+}

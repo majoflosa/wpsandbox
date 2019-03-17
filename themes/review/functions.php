@@ -28,6 +28,19 @@ function rev_setup() {
 
     // add_theme_support( 'starter-content' );
 
+    // Block features
+    add_theme_support( 'wp-block-styles' );
+    add_theme_support( 'editor-styles' ); // not specifically block-related
+    add_theme_support( 'align-wide' ); // enable wide- and full- alignments on back-end-
+    add_theme_support( 'editor-color-palette', array(
+        array(
+            'name' => 'Color Name',
+            'slug' => 'color-slug',
+            'color' => '#ff5511'
+        ),
+        // more colors...
+    ) );
+
     register_nav_menus( array(
         'main_nav' => 'Main Navigation'
     ) );
@@ -63,7 +76,7 @@ function review_scripts() {
 add_action( 'wp_enqueue_scripts', 'review_scripts' );
 
 
-// Filters
+// Experiment: Filters
 function someFilterCallback( $string, $arg1 ) {
     return "{$arg1} - {$string}";
 }

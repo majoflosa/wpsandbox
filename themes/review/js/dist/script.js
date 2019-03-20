@@ -86,6 +86,78 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./js/src/components/App.js":
+/*!**********************************!*\
+  !*** ./js/src/components/App.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return App; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var App =
+/*#__PURE__*/
+function () {
+  function App(apiRoot) {
+    _classCallCheck(this, App);
+
+    this.initialRequestUrl = "".concat(apiRoot, "/posts");
+    this.posts = [];
+    this.renderPosts = this.renderPosts.bind(this);
+    this.cacheDom = this.cacheDom.bind(this);
+    this.getPosts = this.getPosts.bind(this);
+    this.cacheDom();
+    this.getPosts();
+  }
+
+  _createClass(App, [{
+    key: "cacheDom",
+    value: function cacheDom() {
+      this.element = document.querySelector('#primary');
+    }
+  }, {
+    key: "getPosts",
+    value: function getPosts() {
+      var _this = this;
+
+      fetch(this.initialRequestUrl).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        _this.posts = response;
+
+        _this.renderPosts(_this.posts);
+      }).catch(function (err) {
+        return console.log(err);
+      });
+    }
+  }, {
+    key: "renderPosts",
+    value: function renderPosts(posts) {
+      var _this2 = this;
+
+      console.log(posts);
+      var content = '';
+      posts.forEach(function (post) {
+        content += "\n                <article class=\"entry\">\n                    <header class=\"entry__header\">\n                        <h2 class=\"entry__title\"><a href=\"".concat(post.link, "\">").concat(post.title.rendered, "</a></h2>\n                    </header>\n                    <main class=\"entry__body\">").concat(post.excerpt.rendered, "</main>\n                </article>\n            ");
+        _this2.element.innerHTML = content;
+      });
+    }
+  }]);
+
+  return App;
+}();
+
+
+
+/***/ }),
+
 /***/ "./js/src/index.js":
 /*!*************************!*\
   !*** ./js/src/index.js ***!
@@ -97,7 +169,11 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sass_style_sass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../sass/style.sass */ "./sass/style.sass");
 /* harmony import */ var _sass_style_sass__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_sass_style_sass__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/App */ "./js/src/components/App.js");
 
+
+var apiRoot = 'http://localhost:8888/wpsandbox/wp-json/wp/v2';
+var app = new _components_App__WEBPACK_IMPORTED_MODULE_1__["default"](apiRoot);
 
 /***/ }),
 

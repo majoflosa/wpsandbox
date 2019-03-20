@@ -4,6 +4,7 @@
 
 <div class="template-label"><small>index.php</small></div>
 
+<?php // echo is_front_page() ? '<p>is front page</p>' : '<p>is not front page</p>'; ?>
 
 <section id="primary" class="primary">
 

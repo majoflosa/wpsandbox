@@ -70,8 +70,11 @@ function review_scripts() {
     $loadInFooter = true; // true by default
     $version = $_SERVER['DOCUMENT_ROOT'] === '/Applications/MAMP/htdocs' ? time() : '0.0.1';
     
-    wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );
-    // wp_enqueue_script( 'unique-handle', get_stylesheet_directory_uri, array(), $version, $loadInFooter );
+    if ( is_front_page() ) {
+        wp_enqueue_script( 'review-main', get_stylesheet_directory_uri() . '/js/dist/script.js', array(), $version, $loadInFooter );
+    } else {
+        wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'review_scripts' );
 

@@ -42,7 +42,7 @@ if ( have_posts() ) :
                 ); ?>
             <?php else : ?>
                 <p>There are no comments for this article.</p>
-            <? endif; ?>
+            <?php endif; ?>
         </div>
     </div>
     <?php endif; ?>

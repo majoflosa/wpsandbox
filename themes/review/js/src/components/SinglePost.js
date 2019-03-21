@@ -1,8 +1,14 @@
-export default class SinglePost {
+import BaseComponent from './BaseComponent';
+
+export default class SinglePost extends BaseComponent {
     constructor( router, endpoint ) {
+        super( router );
+
         this.endpoint = `${router.baseUrl}/wp-json/wp/v2/${endpoint}`
-        this.router = router;
         this.element = document.querySelector( '#primary' );
+
+        this.cacheDom();
+        this.bindEvents();
         
         this.getPost();
     }
@@ -16,8 +22,13 @@ export default class SinglePost {
 
                 this.cacheDom();
                 this.bindEvents();
+
+                this.contentLoaded( this.element );
             })
-            .catch( err => console.log(err) );
+            .catch( err => {
+                console.log(err.response);
+                this.contentFailed( this.element );
+            });
     }
 
     cacheDom() {

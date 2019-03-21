@@ -113,16 +113,16 @@ var App = function App() {
 
 /***/ }),
 
-/***/ "./js/src/components/Posts.js":
-/*!************************************!*\
-  !*** ./js/src/components/Posts.js ***!
-  \************************************/
+/***/ "./js/src/components/BaseComponent.js":
+/*!********************************************!*\
+  !*** ./js/src/components/BaseComponent.js ***!
+  \********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Posts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BaseComponent; });
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -137,39 +137,51 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var Posts =
+var BaseComponent =
 /*#__PURE__*/
 function () {
-  function Posts(router) {
-    var endpoint = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'posts';
+  function BaseComponent(router) {
+    _classCallCheck(this, BaseComponent);
 
-    _classCallCheck(this, Posts);
-
-    this.apiUrl = "".concat(router.baseUrl, "/wp-json/wp/v2/").concat(endpoint);
-    this.posts = [];
-    this.element = document.querySelector('#primary');
-    this.router = router;
-    this.render = this.render.bind(this);
+    this.init = this.init.bind(this);
+    this.mapLinkRoute = this.mapLinkRoute.bind(this);
+    this.contentLoaded = this.contentLoaded.bind(this);
     this.cacheDom = this.cacheDom.bind(this);
     this.bindEvents = this.bindEvents.bind(this);
-    this.mapLinkRoute = this.mapLinkRoute.bind(this);
-    this.getPosts = this.getPosts.bind(this);
-    this.render = this.render.bind(this);
-    this.getPosts();
+    this.init(router);
   }
 
-  _createClass(Posts, [{
-    key: "cacheDom",
-    value: function cacheDom() {
-      this.routerLinks = _toConsumableArray(document.querySelectorAll('[data-route]'));
+  _createClass(BaseComponent, [{
+    key: "init",
+    value: function init(router) {
+      this.router = router;
+      this.DOM = {};
     }
   }, {
-    key: "bindEvents",
-    value: function bindEvents() {
+    key: "contentLoaded",
+    value: function contentLoaded($element) {
+      this.cacheRouterLinks($element);
+      this.bindRouterEvents();
+      console.log(this.DOM);
+    }
+  }, {
+    key: "contentFailed",
+    value: function contentFailed(err, $element) {
+      console.log(err.response);
+      $element.innerHTML = '<h1>Whoops! Something went wrong...</h1>';
+    }
+  }, {
+    key: "cacheRouterLinks",
+    value: function cacheRouterLinks($element) {
+      this.DOM.routerLinks = _toConsumableArray($element.querySelectorAll('[data-route]'));
+    }
+  }, {
+    key: "bindRouterEvents",
+    value: function bindRouterEvents() {
       var _this = this;
 
-      this.routerLinks.forEach(function (link) {
-        return link.addEventListener('click', function (e) {
+      this.DOM.routerLinks.forEach(function ($link) {
+        $link.addEventListener('click', function (e) {
           return _this.mapLinkRoute(e);
         });
       });
@@ -177,43 +189,137 @@ function () {
   }, {
     key: "mapLinkRoute",
     value: function mapLinkRoute(event) {
-      event.preventDefault();
-      this.router.setRoute(event.target.dataset.route, event.target.dataset.component, event.target.dataset.endpoint);
+      event.preventDefault(); // this.DOM = {};
+
+      var _event$target$dataset = event.target.dataset,
+          route = _event$target$dataset.route,
+          component = _event$target$dataset.component,
+          endpoint = _event$target$dataset.endpoint;
+      this.router.setRoute(route, component, endpoint);
+    }
+  }]);
+
+  return BaseComponent;
+}();
+
+
+
+/***/ }),
+
+/***/ "./js/src/components/Posts.js":
+/*!************************************!*\
+  !*** ./js/src/components/Posts.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Posts; });
+/* harmony import */ var _BaseComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BaseComponent */ "./js/src/components/BaseComponent.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var Posts =
+/*#__PURE__*/
+function (_BaseComponent) {
+  _inherits(Posts, _BaseComponent);
+
+  function Posts(router) {
+    var _this;
+
+    var endpoint = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'posts';
+
+    _classCallCheck(this, Posts);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Posts).call(this, router));
+    _this.apiUrl = "".concat(router.baseUrl, "/wp-json/wp/v2/").concat(endpoint);
+    _this.posts = [];
+    _this.element = document.querySelector('#primary');
+    _this.render = _this.render.bind(_assertThisInitialized(_this));
+    _this.cacheDom = _this.cacheDom.bind(_assertThisInitialized(_this));
+    _this.bindEvents = _this.bindEvents.bind(_assertThisInitialized(_this));
+    _this.handleClickPrimary = _this.handleClickPrimary.bind(_assertThisInitialized(_this));
+    _this.getPosts = _this.getPosts.bind(_assertThisInitialized(_this));
+    _this.render = _this.render.bind(_assertThisInitialized(_this));
+
+    _this.getPosts();
+
+    return _this;
+  }
+
+  _createClass(Posts, [{
+    key: "cacheDom",
+    value: function cacheDom() {
+      this.DOM.firstArticle = document.querySelector('.entry');
+    }
+  }, {
+    key: "bindEvents",
+    value: function bindEvents() {
+      var _this2 = this;
+
+      this.DOM.firstArticle.addEventListener('click', function (e) {
+        return _this2.handleClickPrimary(e);
+      });
     }
   }, {
     key: "getPosts",
     value: function getPosts() {
-      var _this2 = this;
+      var _this3 = this;
 
       fetch(this.apiUrl).then(function (response) {
         return response.json();
       }).then(function (response) {
-        _this2.posts = response;
+        _this3.posts = response;
 
-        _this2.render(_this2.posts);
+        _this3.render(_this3.posts);
 
-        _this2.cacheDom();
+        _this3.cacheDom();
 
-        _this2.bindEvents();
+        _this3.bindEvents();
+
+        _this3.contentLoaded(_this3.element);
       }).catch(function (err) {
-        return console.log(err);
+        return _this3.contentFailed(err, _this3.element);
       });
+    }
+  }, {
+    key: "handleClickPrimary",
+    value: function handleClickPrimary(event) {
+      console.log('Primary clicked: ', event);
     }
   }, {
     key: "render",
     value: function render(posts) {
-      var _this3 = this;
+      var _this4 = this;
 
       var content = '';
       posts.forEach(function (post) {
         content += "\n                <article class=\"entry\">\n                    <header class=\"entry__header\">\n                        <h2 class=\"entry__title\">\n                            <a href=\"".concat(post.link, "\" data-component=\"SinglePost\" data-route=\"").concat(post.slug, "\" data-endpoint=\"posts/").concat(post.id, "\">\n                                ").concat(post.title.rendered, "\n                            </a>\n                        </h2>\n                    </header>\n                    <main class=\"entry__body\">").concat(post.excerpt.rendered, "</main>\n                </article>\n            ");
-        _this3.element.innerHTML = content;
+        _this4.element.innerHTML = content;
       });
     }
   }]);
 
   return Posts;
-}();
+}(_BaseComponent__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
 
@@ -229,41 +335,71 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SinglePost; });
+/* harmony import */ var _BaseComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BaseComponent */ "./js/src/components/BaseComponent.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
 var SinglePost =
 /*#__PURE__*/
-function () {
+function (_BaseComponent) {
+  _inherits(SinglePost, _BaseComponent);
+
   function SinglePost(router, endpoint) {
+    var _this;
+
     _classCallCheck(this, SinglePost);
 
-    this.endpoint = "".concat(router.baseUrl, "/wp-json/wp/v2/").concat(endpoint);
-    this.router = router;
-    this.element = document.querySelector('#primary');
-    this.getPost();
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(SinglePost).call(this, router));
+    _this.endpoint = "".concat(router.baseUrl, "/wp-json/wp/v2/").concat(endpoint);
+    _this.element = document.querySelector('#primary');
+
+    _this.cacheDom();
+
+    _this.bindEvents();
+
+    _this.getPost();
+
+    return _this;
   }
 
   _createClass(SinglePost, [{
     key: "getPost",
     value: function getPost() {
-      var _this = this;
+      var _this2 = this;
 
       fetch(this.endpoint).then(function (response) {
         return response.json();
       }).then(function (response) {
-        _this.post = response;
+        _this2.post = response;
 
-        _this.render(_this.post);
+        _this2.render(_this2.post);
 
-        _this.cacheDom();
+        _this2.cacheDom();
 
-        _this.bindEvents();
+        _this2.bindEvents();
+
+        _this2.contentLoaded(_this2.element);
       }).catch(function (err) {
-        return console.log(err);
+        console.log(err.response);
+
+        _this2.contentFailed(_this2.element);
       });
     }
   }, {
@@ -281,7 +417,7 @@ function () {
   }]);
 
   return SinglePost;
-}();
+}(_BaseComponent__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
 
@@ -335,7 +471,6 @@ function () {
 
     _classCallCheck(this, Router);
 
-    // get route from window.location
     this.baseUrl = 'http://localhost:8888/wpsandbox';
     this.location = window.location;
     this.currentView = 'Posts';
@@ -345,8 +480,7 @@ function () {
     };
     this.browsingHistoryMap = {};
     this.setRoute = this.setRoute.bind(this);
-    this.handleBrowserNav = this.handleBrowserNav.bind(this); // this.handleBrowserNav();
-
+    this.handleBrowserNav = this.handleBrowserNav.bind(this);
     window.addEventListener('popstate', function (e) {
       return _this.handleBrowserNav(e);
     });
@@ -359,8 +493,7 @@ function () {
       var endpoint = arguments.length > 2 ? arguments[2] : undefined;
       if (!this.browsingHistoryMap[route]) window.history.pushState({
         endpoint: endpoint
-      }, '', "".concat(this.baseUrl, "/#/").concat(route)); // console.log( window.history );
-
+      }, '', "".concat(this.baseUrl, "/#/").concat(route));
       this.location.hash = "/".concat(route);
       this.setView(component, endpoint);
       this.browsingHistoryMap[route] = component;
@@ -374,13 +507,6 @@ function () {
   }, {
     key: "handleBrowserNav",
     value: function handleBrowserNav(event) {
-      // window.addEventListener( 'hashchange', (e) => {
-      //     const route = e.newURL.split('#/')[1];
-      //     // window.history.pushState( {}, '', `${this.baseUrl}/#/${route}` );
-      //     // if ( this.browsingHistoryMap[route] ) 
-      //     this.setRoute( route, this.browsingHistoryMap[route] );
-      // });
-      // console.log( event );
       var route = event.path[0].location.hash.split('#/')[1];
       var endpoint = event.path[0].history.state.endpoint;
       this.setRoute(route, this.browsingHistoryMap[route], endpoint);

@@ -1,14 +1,17 @@
-export default class Posts {
+import BaseComponent from './BaseComponent';
+
+export default class Posts extends BaseComponent {
     constructor( router, endpoint = 'posts') {
+        super( router );
+
         this.apiUrl = `${router.baseUrl}/wp-json/wp/v2/${endpoint}`;
         this.posts = [];
         this.element = document.querySelector( '#primary' );
-        this.router = router;
 
         this.render = this.render.bind( this );
         this.cacheDom = this.cacheDom.bind( this );
         this.bindEvents = this.bindEvents.bind( this );
-        this.mapLinkRoute = this.mapLinkRoute.bind( this );
+        this.handleClickPrimary = this.handleClickPrimary.bind( this );
         this.getPosts = this.getPosts.bind( this );
         this.render = this.render.bind( this );
 
@@ -16,20 +19,12 @@ export default class Posts {
     }
 
     cacheDom() {
-        this.routerLinks = [...document.querySelectorAll( '[data-route]' )];
+        this.DOM.firstArticle = document.querySelector( '.entry' );
     }
 
     bindEvents() {
-        this.routerLinks.forEach( link => link.addEventListener('click', (e) => this.mapLinkRoute(e)) );
-    }
-
-    mapLinkRoute( event ) {
-        event.preventDefault();
-        this.router.setRoute( 
-            event.target.dataset.route, 
-            event.target.dataset.component, 
-            event.target.dataset.endpoint 
-        );
+        this.DOM.firstArticle
+            .addEventListener( 'click', (e) => this.handleClickPrimary(e) );
     }
 
     getPosts() {
@@ -38,11 +33,16 @@ export default class Posts {
             .then( response => {
                 this.posts = response;
                 this.render( this.posts );
-
                 this.cacheDom();
                 this.bindEvents();
+
+                this.contentLoaded( this.element );
             })
-            .catch( err => console.log(err) );
+            .catch( err => this.contentFailed(err, this.element) );
+    }
+
+    handleClickPrimary( event ) {
+        console.log( 'Primary clicked: ', event );
     }
 
     render( posts ) {

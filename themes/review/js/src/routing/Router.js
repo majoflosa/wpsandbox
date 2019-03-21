@@ -33,9 +33,19 @@ export default class Router {
         this.browsingHistoryMap[route] = component;
     }
 
+    getRoute() {
+        return this.location.hash 
+            ? this.location.hash.split('#/')[1]
+            : 'home';
+    }
+
     setView( component, endpoint ) {
         this.currentView = component;
         new this.views[component]( this, endpoint );
+    }
+
+    getView() {
+        return this.currentView;
     }
 
     handleBrowserNav( event ) {

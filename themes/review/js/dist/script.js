@@ -97,7 +97,9 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return App; });
 /* harmony import */ var _routing_Router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../routing/Router */ "./js/src/routing/Router.js");
+/* harmony import */ var _Nav__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Nav */ "./js/src/components/Nav.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 
 
@@ -106,7 +108,8 @@ var App = function App() {
 
   this.router = new _routing_Router__WEBPACK_IMPORTED_MODULE_0__["default"]();
   this.element = document.querySelector('#primary');
-  this.router.setRoute('home');
+  this.nav = new _Nav__WEBPACK_IMPORTED_MODULE_1__["default"](this.router);
+  this.router.setRoute(this.router.getRoute());
 };
 
 
@@ -200,6 +203,123 @@ function () {
   }]);
 
   return BaseComponent;
+}();
+
+
+
+/***/ }),
+
+/***/ "./js/src/components/Nav.js":
+/*!**********************************!*\
+  !*** ./js/src/components/Nav.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Nav; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Nav =
+/*#__PURE__*/
+function () {
+  function Nav(router) {
+    _classCallCheck(this, Nav);
+
+    this.element = document.querySelector('#site-header__nav');
+    this.router = router;
+    this.navItems = [];
+    this.getNavPages = this.getNavPages.bind(this);
+    this.render = this.render.bind(this);
+    this.getNavPages();
+  }
+
+  _createClass(Nav, [{
+    key: "getNavPages",
+    value: function getNavPages() {
+      var _this = this;
+
+      fetch("".concat(this.router.baseUrl, "/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc")).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        console.log('pages: ', response);
+        _this.navItems = response.filter(function (page) {
+          return page.parent === 0;
+        });
+
+        _this.render();
+      }).catch(function (err) {
+        return console.log(err);
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var $navContent = document.createElement('ul');
+      $navContent.id = 'site-header__nav-links';
+      $navContent.classList.add('site-header__nav-links');
+      this.navItems.forEach(function (item) {
+        var $link = document.createElement('li');
+        $link.id = "menu-item-".concat(item.id);
+        $link.classList.add('menu-item');
+        $link.innerHTML = "\n                <span><a href=\"\" data-component=\"Page\" data-route=\"".concat(item.slug, "\" data-endpoint=\"\">").concat(item.title.rendered, "</a></span> \n            ");
+        $navContent.appendChild($link);
+      });
+      /*
+      navContent.innerHTML = `
+          <li id="menu-item-1759" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-1759">
+              <span class="before-link-markup">
+                  <a href="http://localhost:8888/wpsandbox/" aria-current="page">Home</a>
+              </span>
+          </li>
+          <li id="menu-item-1760" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1760">
+              <span class="before-link-markup">
+                  <a href="http://localhost:8888/wpsandbox/blog/">a Blog page</a>
+              </span>
+          </li>
+          <li id="menu-item-1761" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1761">
+              <span class="before-link-markup">
+                  <a href="http://localhost:8888/wpsandbox/front-page/">Front Page</a>
+              </span>
+          </li>
+          <li id="menu-item-1762" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1762">
+              <span class="before-link-markup">
+                  <a href="http://localhost:8888/wpsandbox/about/">About The Tests</a>
+              </span>
+          </li>
+          <li id="menu-item-1766" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1766">
+              <span class="before-link-markup">
+                  <a href="http://localhost:8888/wpsandbox/level-1/">Level 1</a>
+              </span>
+          </li>
+          <li id="menu-item-1769" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1769">
+              <span class="before-link-markup">
+                  <a href="http://localhost:8888/wpsandbox/lorem-ipsum/">Lorem Ipsum</a>
+              </span>
+          </li>
+          <li id="menu-item-1791" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1791">
+              <span class="before-link-markup">
+                  <a href="http://localhost:8888/wpsandbox/page-a/">Page A</a>
+              </span>
+          </li>
+          <li id="menu-item-1792" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1792">
+              <span class="before-link-markup">
+                  <a href="http://localhost:8888/wpsandbox/page-b/">Page B</a>
+              </span>
+          </li>
+      `;
+      */
+
+      this.element.appendChild($navContent);
+    }
+  }]);
+
+  return Nav;
 }();
 
 
@@ -499,10 +619,20 @@ function () {
       this.browsingHistoryMap[route] = component;
     }
   }, {
+    key: "getRoute",
+    value: function getRoute() {
+      return this.location.hash ? this.location.hash.split('#/')[1] : 'home';
+    }
+  }, {
     key: "setView",
     value: function setView(component, endpoint) {
       this.currentView = component;
       new this.views[component](this, endpoint);
+    }
+  }, {
+    key: "getView",
+    value: function getView() {
+      return this.currentView;
     }
   }, {
     key: "handleBrowserNav",

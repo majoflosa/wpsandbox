@@ -3,8 +3,8 @@ export default class BaseComponent {
         this.init = this.init.bind( this );
         this.mapLinkRoute = this.mapLinkRoute.bind( this );
         this.contentLoaded = this.contentLoaded.bind( this );
-        this.cacheDom = this.cacheDom.bind( this );
-        this.bindEvents = this.bindEvents.bind( this );
+        this.cacheRouterLinks = this.cacheRouterLinks.bind( this );
+        this.bindRouterEvents = this.bindRouterEvents.bind( this );
 
         this.init( router );
     }
@@ -14,10 +14,9 @@ export default class BaseComponent {
         this.DOM = {};
     }
 
-    contentLoaded( $element) {
+    contentLoaded( $element ) {
         this.cacheRouterLinks( $element );
         this.bindRouterEvents();
-        console.log( this.DOM );
     }
 
     contentFailed( err, $element ) {
@@ -37,7 +36,6 @@ export default class BaseComponent {
 
     mapLinkRoute( event ) {
         event.preventDefault();
-        // this.DOM = {};
 
         const { route, component, endpoint } = event.target.dataset;
         this.router.setRoute( route, component, endpoint );

@@ -149,8 +149,8 @@ function () {
     this.init = this.init.bind(this);
     this.mapLinkRoute = this.mapLinkRoute.bind(this);
     this.contentLoaded = this.contentLoaded.bind(this);
-    this.cacheDom = this.cacheDom.bind(this);
-    this.bindEvents = this.bindEvents.bind(this);
+    this.cacheRouterLinks = this.cacheRouterLinks.bind(this);
+    this.bindRouterEvents = this.bindRouterEvents.bind(this);
     this.init(router);
   }
 
@@ -165,7 +165,6 @@ function () {
     value: function contentLoaded($element) {
       this.cacheRouterLinks($element);
       this.bindRouterEvents();
-      console.log(this.DOM);
     }
   }, {
     key: "contentFailed",
@@ -192,8 +191,7 @@ function () {
   }, {
     key: "mapLinkRoute",
     value: function mapLinkRoute(event) {
-      event.preventDefault(); // this.DOM = {};
-
+      event.preventDefault();
       var _event$target$dataset = event.target.dataset,
           route = _event$target$dataset.route,
           component = _event$target$dataset.component,
@@ -219,42 +217,68 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Nav; });
+/* harmony import */ var _BaseComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BaseComponent */ "./js/src/components/BaseComponent.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
 var Nav =
 /*#__PURE__*/
-function () {
+function (_BaseComponent) {
+  _inherits(Nav, _BaseComponent);
+
   function Nav(router) {
+    var _this;
+
     _classCallCheck(this, Nav);
 
-    this.element = document.querySelector('#site-header__nav');
-    this.router = router;
-    this.navItems = [];
-    this.getNavPages = this.getNavPages.bind(this);
-    this.render = this.render.bind(this);
-    this.getNavPages();
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Nav).call(this, router));
+    _this.element = document.querySelector('#site-header__nav');
+    _this.navItems = [];
+    _this.getNavPages = _this.getNavPages.bind(_assertThisInitialized(_this));
+    _this.render = _this.render.bind(_assertThisInitialized(_this));
+
+    _this.getNavPages();
+
+    return _this;
   }
 
   _createClass(Nav, [{
     key: "getNavPages",
     value: function getNavPages() {
-      var _this = this;
+      var _this2 = this;
 
       fetch("".concat(this.router.baseUrl, "/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc")).then(function (response) {
         return response.json();
       }).then(function (response) {
         console.log('pages: ', response);
-        _this.navItems = response.filter(function (page) {
+        _this2.navItems = response.filter(function (page) {
           return page.parent === 0;
         });
 
-        _this.render();
+        _this2.render();
+
+        _this2.contentLoaded(_this2.element);
       }).catch(function (err) {
-        return console.log(err);
+        console.log(err);
+
+        _this2.contentFailed(err, $element);
       });
     }
   }, {
@@ -267,60 +291,79 @@ function () {
         var $link = document.createElement('li');
         $link.id = "menu-item-".concat(item.id);
         $link.classList.add('menu-item');
-        $link.innerHTML = "\n                <span><a href=\"\" data-component=\"Page\" data-route=\"".concat(item.slug, "\" data-endpoint=\"\">").concat(item.title.rendered, "</a></span> \n            ");
+        $link.innerHTML = "\n                <span>\n                    <a href=\"\" data-component=\"Page\" data-route=\"".concat(item.slug, "\" data-endpoint=\"page/").concat(item.id, "\">\n                        ").concat(item.title.rendered, "\n                    </a>\n                </span> \n            ");
         $navContent.appendChild($link);
       });
-      /*
-      navContent.innerHTML = `
-          <li id="menu-item-1759" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home menu-item-1759">
-              <span class="before-link-markup">
-                  <a href="http://localhost:8888/wpsandbox/" aria-current="page">Home</a>
-              </span>
-          </li>
-          <li id="menu-item-1760" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1760">
-              <span class="before-link-markup">
-                  <a href="http://localhost:8888/wpsandbox/blog/">a Blog page</a>
-              </span>
-          </li>
-          <li id="menu-item-1761" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1761">
-              <span class="before-link-markup">
-                  <a href="http://localhost:8888/wpsandbox/front-page/">Front Page</a>
-              </span>
-          </li>
-          <li id="menu-item-1762" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1762">
-              <span class="before-link-markup">
-                  <a href="http://localhost:8888/wpsandbox/about/">About The Tests</a>
-              </span>
-          </li>
-          <li id="menu-item-1766" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1766">
-              <span class="before-link-markup">
-                  <a href="http://localhost:8888/wpsandbox/level-1/">Level 1</a>
-              </span>
-          </li>
-          <li id="menu-item-1769" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1769">
-              <span class="before-link-markup">
-                  <a href="http://localhost:8888/wpsandbox/lorem-ipsum/">Lorem Ipsum</a>
-              </span>
-          </li>
-          <li id="menu-item-1791" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1791">
-              <span class="before-link-markup">
-                  <a href="http://localhost:8888/wpsandbox/page-a/">Page A</a>
-              </span>
-          </li>
-          <li id="menu-item-1792" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1792">
-              <span class="before-link-markup">
-                  <a href="http://localhost:8888/wpsandbox/page-b/">Page B</a>
-              </span>
-          </li>
-      `;
-      */
-
       this.element.appendChild($navContent);
     }
   }]);
 
   return Nav;
-}();
+}(_BaseComponent__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+
+/***/ }),
+
+/***/ "./js/src/components/Page.js":
+/*!***********************************!*\
+  !*** ./js/src/components/Page.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Page; });
+/* harmony import */ var _BaseComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BaseComponent */ "./js/src/components/BaseComponent.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var Page =
+/*#__PURE__*/
+function (_BaseComponent) {
+  _inherits(Page, _BaseComponent);
+
+  function Page(router) {
+    var _this;
+
+    _classCallCheck(this, Page);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Page).call(this, router));
+    _this.element = document.querySelector('#primary');
+    _this.render = _this.render.bind(_assertThisInitialized(_this));
+
+    _this.render();
+
+    return _this;
+  }
+
+  _createClass(Page, [{
+    key: "render",
+    value: function render() {
+      this.element.innerHTML = '<h1>Page Component</h1>';
+    }
+  }]);
+
+  return Page;
+}(_BaseComponent__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
 
@@ -531,7 +574,6 @@ function (_BaseComponent) {
   }, {
     key: "render",
     value: function render(post) {
-      console.log(post);
       this.element.innerHTML = "\n            <article class=\"entry\">\n                <header class=\"entry__header\">\n                    <h2 class=\"entry__title\">\n                        <a href=\"".concat(post.link, "\" data-component=\"SinglePost\" data-route=\"").concat(post.slug, "\" data-endpoint=\"posts/").concat(post.id, "\">\n                            ").concat(post.title.rendered, "\n                        </a>\n                    </h2>\n                </header>\n                <main class=\"entry__body\">").concat(post.content.rendered, "</main>\n            </article>\n        ");
     }
   }]);
@@ -574,11 +616,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Router; });
 /* harmony import */ var _components_Posts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Posts */ "./js/src/components/Posts.js");
 /* harmony import */ var _components_SinglePost__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/SinglePost */ "./js/src/components/SinglePost.js");
+/* harmony import */ var _components_Page__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Page */ "./js/src/components/Page.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -596,7 +640,8 @@ function () {
     this.currentView = 'Posts';
     this.views = {
       'Posts': _components_Posts__WEBPACK_IMPORTED_MODULE_0__["default"],
-      'SinglePost': _components_SinglePost__WEBPACK_IMPORTED_MODULE_1__["default"]
+      'SinglePost': _components_SinglePost__WEBPACK_IMPORTED_MODULE_1__["default"],
+      'Page': _components_Page__WEBPACK_IMPORTED_MODULE_2__["default"]
     };
     this.browsingHistoryMap = {};
     this.setRoute = this.setRoute.bind(this);

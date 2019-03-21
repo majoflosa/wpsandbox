@@ -1,5 +1,6 @@
 import Posts from '../components/Posts';
 import SinglePost from '../components/SinglePost';
+import Page from '../components/Page';
 
 export default class Router {
     constructor() {
@@ -9,7 +10,8 @@ export default class Router {
         this.currentView = 'Posts';
         this.views = {
             'Posts': Posts,
-            'SinglePost': SinglePost
+            'SinglePost': SinglePost,
+            'Page': Page
         };
 
         this.browsingHistoryMap = {};

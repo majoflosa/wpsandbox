@@ -37,7 +37,6 @@ export default class SinglePost extends BaseComponent {
     bindEvents() {}
 
     render( post ) {
-        console.log( post );
         this.element.innerHTML = `
             <article class="entry">
                 <header class="entry__header">

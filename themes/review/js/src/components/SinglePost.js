@@ -1,6 +1,6 @@
 export default class SinglePost {
-    constructor( router, reqUrl ) {
-        this.reqUrl = `${router.baseUrl}/wp-json/wp/v2/${reqUrl}`
+    constructor( router, endpoint ) {
+        this.endpoint = `${router.baseUrl}/wp-json/wp/v2/${endpoint}`
         this.router = router;
         this.element = document.querySelector( '#primary' );
         
@@ -8,7 +8,7 @@ export default class SinglePost {
     }
 
     getPost() {
-        fetch( this.reqUrl )
+        fetch( this.endpoint )
             .then( response => response.json() )
             .then( response => {
                 this.post = response;

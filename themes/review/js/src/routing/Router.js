@@ -18,31 +18,39 @@ export default class Router {
         this.setRoute = this.setRoute.bind( this );
         this.handleBrowserNav = this.handleBrowserNav.bind( this );
         
-        this.handleBrowserNav();
+        // this.handleBrowserNav();
+        window.addEventListener( 'popstate', (e) => this.handleBrowserNav(e) );
     }
 
     setRoute( route, component = 'Posts', endpoint ) {
-        window.history.pushState( {}, '', `${this.baseUrl}/#/${route}` );
-        this.location.hash = `/${route}`;
+        if ( !this.browsingHistoryMap[route] )
+            window.history.pushState( 
+                {endpoint: endpoint}, 
+                '', 
+                `${this.baseUrl}/#/${route}` 
+            );
         
+        // console.log( window.history );
+        this.location.hash = `/${route}`;
         this.setView( component, endpoint );
-
         this.browsingHistoryMap[route] = component;
     }
 
     setView( component, endpoint ) {
         this.currentView = component;
-
         new this.views[component]( this, endpoint );
     }
 
-    handleBrowserNav() {
-        window.addEventListener( 'hashchange', (e) => {
-            console.log( e );
-            const route = e.newURL.split('#/')[1];
-
-            window.history.pushState( {}, '', `${this.baseUrl}/#/${route}` );
-            this.setRoute( route, this.browsingHistoryMap[route] );
-        });
+    handleBrowserNav( event ) {
+        // window.addEventListener( 'hashchange', (e) => {
+        //     const route = e.newURL.split('#/')[1];
+        //     // window.history.pushState( {}, '', `${this.baseUrl}/#/${route}` );
+        //     // if ( this.browsingHistoryMap[route] ) 
+        //     this.setRoute( route, this.browsingHistoryMap[route] );
+        // });
+        // console.log( event );
+        const route = event.path[0].location.hash.split('#/')[1];
+        const endpoint = event.path[0].history.state.endpoint;
+        this.setRoute( route, this.browsingHistoryMap[route], endpoint );
     }
 }

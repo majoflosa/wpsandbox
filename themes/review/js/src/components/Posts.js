@@ -1,6 +1,6 @@
 export default class Posts {
-    constructor( router ) {
-        this.apiUrl = `http://localhost:8888/wpsandbox/wp-json/wp/v2/posts`;
+    constructor( router, endpoint = 'posts') {
+        this.apiUrl = `${router.baseUrl}/wp-json/wp/v2/${endpoint}`;
         this.posts = [];
         this.element = document.querySelector( '#primary' );
         this.router = router;
@@ -46,8 +46,6 @@ export default class Posts {
     }
 
     render( posts ) {
-        console.log(posts);
-
         let content = '';
         posts.forEach( post => {
             content += `

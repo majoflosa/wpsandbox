@@ -141,9 +141,11 @@ var Posts =
 /*#__PURE__*/
 function () {
   function Posts(router) {
+    var endpoint = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'posts';
+
     _classCallCheck(this, Posts);
 
-    this.apiUrl = "http://localhost:8888/wpsandbox/wp-json/wp/v2/posts";
+    this.apiUrl = "".concat(router.baseUrl, "/wp-json/wp/v2/").concat(endpoint);
     this.posts = [];
     this.element = document.querySelector('#primary');
     this.router = router;
@@ -202,7 +204,6 @@ function () {
     value: function render(posts) {
       var _this3 = this;
 
-      console.log(posts);
       var content = '';
       posts.forEach(function (post) {
         content += "\n                <article class=\"entry\">\n                    <header class=\"entry__header\">\n                        <h2 class=\"entry__title\">\n                            <a href=\"".concat(post.link, "\" data-component=\"SinglePost\" data-route=\"").concat(post.slug, "\" data-endpoint=\"posts/").concat(post.id, "\">\n                                ").concat(post.title.rendered, "\n                            </a>\n                        </h2>\n                    </header>\n                    <main class=\"entry__body\">").concat(post.excerpt.rendered, "</main>\n                </article>\n            ");
@@ -237,10 +238,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var SinglePost =
 /*#__PURE__*/
 function () {
-  function SinglePost(router, reqUrl) {
+  function SinglePost(router, endpoint) {
     _classCallCheck(this, SinglePost);
 
-    this.reqUrl = "".concat(router.baseUrl, "/wp-json/wp/v2/").concat(reqUrl);
+    this.endpoint = "".concat(router.baseUrl, "/wp-json/wp/v2/").concat(endpoint);
     this.router = router;
     this.element = document.querySelector('#primary');
     this.getPost();
@@ -251,7 +252,7 @@ function () {
     value: function getPost() {
       var _this = this;
 
-      fetch(this.reqUrl).then(function (response) {
+      fetch(this.endpoint).then(function (response) {
         return response.json();
       }).then(function (response) {
         _this.post = response;
@@ -330,6 +331,8 @@ var Router =
 /*#__PURE__*/
 function () {
   function Router() {
+    var _this = this;
+
     _classCallCheck(this, Router);
 
     // get route from window.location
@@ -342,8 +345,11 @@ function () {
     };
     this.browsingHistoryMap = {};
     this.setRoute = this.setRoute.bind(this);
-    this.handleBrowserNav = this.handleBrowserNav.bind(this);
-    this.handleBrowserNav();
+    this.handleBrowserNav = this.handleBrowserNav.bind(this); // this.handleBrowserNav();
+
+    window.addEventListener('popstate', function (e) {
+      return _this.handleBrowserNav(e);
+    });
   }
 
   _createClass(Router, [{
@@ -351,7 +357,10 @@ function () {
     value: function setRoute(route) {
       var component = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Posts';
       var endpoint = arguments.length > 2 ? arguments[2] : undefined;
-      window.history.pushState({}, '', "".concat(this.baseUrl, "/#/").concat(route));
+      if (!this.browsingHistoryMap[route]) window.history.pushState({
+        endpoint: endpoint
+      }, '', "".concat(this.baseUrl, "/#/").concat(route)); // console.log( window.history );
+
       this.location.hash = "/".concat(route);
       this.setView(component, endpoint);
       this.browsingHistoryMap[route] = component;
@@ -364,16 +373,17 @@ function () {
     }
   }, {
     key: "handleBrowserNav",
-    value: function handleBrowserNav() {
-      var _this = this;
-
-      window.addEventListener('hashchange', function (e) {
-        console.log(e);
-        var route = e.newURL.split('#/')[1];
-        window.history.pushState({}, '', "".concat(_this.baseUrl, "/#/").concat(route));
-
-        _this.setRoute(route, _this.browsingHistoryMap[route]);
-      });
+    value: function handleBrowserNav(event) {
+      // window.addEventListener( 'hashchange', (e) => {
+      //     const route = e.newURL.split('#/')[1];
+      //     // window.history.pushState( {}, '', `${this.baseUrl}/#/${route}` );
+      //     // if ( this.browsingHistoryMap[route] ) 
+      //     this.setRoute( route, this.browsingHistoryMap[route] );
+      // });
+      // console.log( event );
+      var route = event.path[0].location.hash.split('#/')[1];
+      var endpoint = event.path[0].history.state.endpoint;
+      this.setRoute(route, this.browsingHistoryMap[route], endpoint);
     }
   }]);
 

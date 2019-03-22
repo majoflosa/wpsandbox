@@ -6,7 +6,13 @@ export default class Page extends BaseComponent {
         this.element = document.querySelector( '#primary' );
         
         this.render = this.render.bind( this );
-        this.render();
+        this.getPageContent = this.getPageContent.bind( this );
+        
+        this.getPageContent();
+    }
+
+    getPageContent() {
+        setTimeout( () => this.render(), 1000 );
     }
 
     render() {

@@ -108,8 +108,12 @@ var App = function App() {
 
   this.router = new _routing_Router__WEBPACK_IMPORTED_MODULE_0__["default"]();
   this.element = document.querySelector('#primary');
-  this.nav = new _Nav__WEBPACK_IMPORTED_MODULE_1__["default"](this.router);
-  this.router.setRoute(this.router.getRoute());
+  this.nav = new _Nav__WEBPACK_IMPORTED_MODULE_1__["default"](this.router); // this.initialComponent = this.router.getRoute() === 'home' ? 'Posts' : 'Not Found';
+  // this.initialEndpoint = this.router.getRoute() === 'home' ? 'posts' : null;
+  // this.router.setRoute( this.router.getRoute(), this.initialComponent, this.initialEndpoint );
+  // SANDBOX Component
+
+  this.router.setRoute('sandbox', 'Sandbox', '');
 };
 
 
@@ -207,6 +211,46 @@ function () {
 
 /***/ }),
 
+/***/ "./js/src/components/Error404.js":
+/*!***************************************!*\
+  !*** ./js/src/components/Error404.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Error404; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Error404 =
+/*#__PURE__*/
+function () {
+  function Error404() {
+    _classCallCheck(this, Error404);
+
+    this.element = document.querySelector('#primary');
+    this.render();
+  }
+
+  _createClass(Error404, [{
+    key: "render",
+    value: function render() {
+      this.element.innerHTML = '<h1>Page not found</h1>';
+    }
+  }]);
+
+  return Error404;
+}();
+
+
+
+/***/ }),
+
 /***/ "./js/src/components/Nav.js":
 /*!**********************************!*\
   !*** ./js/src/components/Nav.js ***!
@@ -267,7 +311,6 @@ function (_BaseComponent) {
       fetch("".concat(this.router.baseUrl, "/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc")).then(function (response) {
         return response.json();
       }).then(function (response) {
-        console.log('pages: ', response);
         _this2.navItems = response.filter(function (page) {
           return page.parent === 0;
         });
@@ -349,13 +392,23 @@ function (_BaseComponent) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Page).call(this, router));
     _this.element = document.querySelector('#primary');
     _this.render = _this.render.bind(_assertThisInitialized(_this));
+    _this.getPageContent = _this.getPageContent.bind(_assertThisInitialized(_this));
 
-    _this.render();
+    _this.getPageContent();
 
     return _this;
   }
 
   _createClass(Page, [{
+    key: "getPageContent",
+    value: function getPageContent() {
+      var _this2 = this;
+
+      setTimeout(function () {
+        return _this2.render();
+      }, 1000);
+    }
+  }, {
     key: "render",
     value: function render() {
       this.element.innerHTML = '<h1>Page Component</h1>';
@@ -488,6 +541,88 @@ function (_BaseComponent) {
 
 /***/ }),
 
+/***/ "./js/src/components/Sandbox.js":
+/*!**************************************!*\
+  !*** ./js/src/components/Sandbox.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Sandbox; });
+/* harmony import */ var _helpers_Rest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helpers/Rest */ "./js/src/helpers/Rest.js");
+/* harmony import */ var _BaseComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BaseComponent */ "./js/src/components/BaseComponent.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+// import { apiBase, apiGetPosts } from '../helpers/rest';
+
+
+
+var Sandbox =
+/*#__PURE__*/
+function (_BaseComponent) {
+  _inherits(Sandbox, _BaseComponent);
+
+  function Sandbox(router) {
+    var _this;
+
+    _classCallCheck(this, Sandbox);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Sandbox).call(this, router));
+    _this.element = document.querySelector('#primary');
+    _this.http = new _helpers_Rest__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    _this.fetchData = _this.fetchData.bind(_assertThisInitialized(_this));
+    _this.render = _this.render.bind(_assertThisInitialized(_this));
+
+    _this.fetchData();
+
+    return _this;
+  }
+
+  _createClass(Sandbox, [{
+    key: "fetchData",
+    value: function fetchData() {
+      var _this2 = this;
+
+      this.http.getPosts({
+        per_page: 5,
+        order: 'asc'
+      }).then(function (response) {
+        if (!_this2.http.posts.err) _this2.render();else console.log(_this2.http.posts.err);
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      this.element.innerHTML = '<h1>Sandbox</h1>';
+      console.log(this.http.posts);
+    }
+  }]);
+
+  return Sandbox;
+}(_BaseComponent__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+
+
+/***/ }),
+
 /***/ "./js/src/components/SinglePost.js":
 /*!*****************************************!*\
   !*** ./js/src/components/SinglePost.js ***!
@@ -585,6 +720,133 @@ function (_BaseComponent) {
 
 /***/ }),
 
+/***/ "./js/src/helpers/Rest.js":
+/*!********************************!*\
+  !*** ./js/src/helpers/Rest.js ***!
+  \********************************/
+/*! exports provided: default, apiBase, resources, apiGetPosts */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Rest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "apiBase", function() { return apiBase; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resources", function() { return resources; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "apiGetPosts", function() { return apiGetPosts; });
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Rest =
+/*#__PURE__*/
+function () {
+  function Rest() {
+    _classCallCheck(this, Rest);
+
+    this.baseUrl = 'http://localhost:8888/wpsandbox/wp-json/wp/v2';
+    this.baseRoute = '';
+    this.queryParams = [];
+    this.posts = null;
+    this.post = null;
+    this.postRevisions = null;
+    this.categories = null;
+    this.tags = null;
+    this.pages = null;
+    this.page = null;
+    this.comments = null;
+    this.taxonomies = null;
+    this.media = null;
+    this.users = null;
+    this.postTypes = null;
+    this.postStatuses = null;
+    this.settings = null;
+  }
+
+  _createClass(Rest, [{
+    key: "getPosts",
+    value: function getPosts(args) {
+      var _this = this;
+
+      this.baseRoute = 'posts';
+
+      if (args && _typeof(args) === 'object') {
+        for (var arg in args) {
+          this.queryParams.push("".concat(arg, "=").concat(args[arg]));
+        }
+      }
+
+      var url = "".concat(this.baseUrl, "/").concat(this.baseRoute, "?").concat(this.queryParams.join('&'));
+      return fetch(url).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        return _this.posts = response;
+      }).catch(function (err) {
+        return _this.posts = {
+          err: err
+        };
+      });
+    }
+  }]);
+
+  return Rest;
+}();
+
+
+var apiBase = 'http://localhost:8888/wpsandbox/wp-json//wp/v2/';
+var resources = {
+  posts: "posts",
+  post: "posts",
+  postRevisions: "revisions",
+  categories: "categories",
+  tags: "tags",
+  pages: "pages",
+  page: "pages",
+  comments: "comments",
+  taxonomies: "taxonomies",
+  media: "media",
+  users: "users",
+  postTypes: "types",
+  postStatuses: "statuses",
+  settings: "settings"
+}; // {
+// baseUrl: 'http://localhost:8888/wpsandbox/wp-json/',
+// version: '/wp/v2/',
+// }
+
+var apiGetPosts = {
+  baseRoute: 'posts',
+  queryParams: {
+    // context: view, // view, embed, edit
+    // page: 1,
+    per_page: 10,
+    // search: '',
+    // after: ISO8601 date,
+    // author: authorId,
+    // author_exclude: authorId,
+    // before: ISO8601 date,
+    // exclude: IDs,
+    // include: IDs,
+    // offset: number,
+    order: 'desc',
+    // desc, asc
+    orderby: 'date' // author, date, id, include, modified, parent, relevance, slug, title
+    // slug: 'page-slug',
+    // status: 'publish', 
+    // categories: categories,
+    // categories_exclude: categories,
+    // tags: tags,
+    // tags_exclude: tags,
+    // sticky: ???
+
+  }
+};
+
+/***/ }),
+
 /***/ "./js/src/index.js":
 /*!*************************!*\
   !*** ./js/src/index.js ***!
@@ -614,14 +876,18 @@ var app = new _components_App__WEBPACK_IMPORTED_MODULE_1__["default"](apiRoot);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Router; });
-/* harmony import */ var _components_Posts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Posts */ "./js/src/components/Posts.js");
-/* harmony import */ var _components_SinglePost__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/SinglePost */ "./js/src/components/SinglePost.js");
-/* harmony import */ var _components_Page__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Page */ "./js/src/components/Page.js");
+/* harmony import */ var _components_Sandbox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Sandbox */ "./js/src/components/Sandbox.js");
+/* harmony import */ var _components_Posts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Posts */ "./js/src/components/Posts.js");
+/* harmony import */ var _components_SinglePost__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/SinglePost */ "./js/src/components/SinglePost.js");
+/* harmony import */ var _components_Page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Page */ "./js/src/components/Page.js");
+/* harmony import */ var _components_Error404__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Error404 */ "./js/src/components/Error404.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
 
 
@@ -639,9 +905,11 @@ function () {
     this.location = window.location;
     this.currentView = 'Posts';
     this.views = {
-      'Posts': _components_Posts__WEBPACK_IMPORTED_MODULE_0__["default"],
-      'SinglePost': _components_SinglePost__WEBPACK_IMPORTED_MODULE_1__["default"],
-      'Page': _components_Page__WEBPACK_IMPORTED_MODULE_2__["default"]
+      'Sandbox': _components_Sandbox__WEBPACK_IMPORTED_MODULE_0__["default"],
+      'Posts': _components_Posts__WEBPACK_IMPORTED_MODULE_1__["default"],
+      'SinglePost': _components_SinglePost__WEBPACK_IMPORTED_MODULE_2__["default"],
+      'Page': _components_Page__WEBPACK_IMPORTED_MODULE_3__["default"],
+      'Not Found': _components_Error404__WEBPACK_IMPORTED_MODULE_4__["default"]
     };
     this.browsingHistoryMap = {};
     this.setRoute = this.setRoute.bind(this);
@@ -654,7 +922,7 @@ function () {
   _createClass(Router, [{
     key: "setRoute",
     value: function setRoute(route) {
-      var component = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Posts';
+      var component = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Not Found';
       var endpoint = arguments.length > 2 ? arguments[2] : undefined;
       if (!this.browsingHistoryMap[route]) window.history.pushState({
         endpoint: endpoint
@@ -666,13 +934,14 @@ function () {
   }, {
     key: "getRoute",
     value: function getRoute() {
-      return this.location.hash ? this.location.hash.split('#/')[1] : 'home';
+      return this.location.hash ? this.location.hash.split('#/')[1] || 'home' : 'home';
     }
   }, {
     key: "setView",
     value: function setView(component, endpoint) {
       this.currentView = component;
-      new this.views[component](this, endpoint);
+      this.currentViewInstance = new this.views[component](this, endpoint);
+      this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
     }
   }, {
     key: "getView",

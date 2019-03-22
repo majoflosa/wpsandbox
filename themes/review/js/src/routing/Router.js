@@ -1,6 +1,8 @@
+import Sandbox from '../components/Sandbox';
 import Posts from '../components/Posts';
 import SinglePost from '../components/SinglePost';
 import Page from '../components/Page';
+import Error404 from '../components/Error404';
 
 export default class Router {
     constructor() {
@@ -9,9 +11,11 @@ export default class Router {
 
         this.currentView = 'Posts';
         this.views = {
+            'Sandbox': Sandbox,
             'Posts': Posts,
             'SinglePost': SinglePost,
-            'Page': Page
+            'Page': Page,
+            'Not Found': Error404
         };
 
         this.browsingHistoryMap = {};
@@ -22,7 +26,7 @@ export default class Router {
         window.addEventListener( 'popstate', (e) => this.handleBrowserNav(e) );
     }
 
-    setRoute( route, component = 'Posts', endpoint ) {
+    setRoute( route, component = 'Not Found', endpoint ) {
         if ( !this.browsingHistoryMap[route] )
             window.history.pushState( 
                 {endpoint: endpoint}, 
@@ -37,13 +41,14 @@ export default class Router {
 
     getRoute() {
         return this.location.hash 
-            ? this.location.hash.split('#/')[1]
+            ? this.location.hash.split('#/')[1] || 'home'
             : 'home';
     }
 
     setView( component, endpoint ) {
         this.currentView = component;
-        new this.views[component]( this, endpoint );
+        this.currentViewInstance = new this.views[component]( this, endpoint );
+        this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
     }
 
     getView() {

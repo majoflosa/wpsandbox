@@ -17,7 +17,6 @@ export default class Nav extends BaseComponent {
         fetch( `${this.router.baseUrl}/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc` )
         .then( response => response.json() )
         .then( response => {
-            console.log( 'pages: ', response );
             this.navItems = response.filter( page => {
                 return page.parent === 0;
             });

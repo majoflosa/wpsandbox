@@ -84,3 +84,14 @@ function someFilterCallback( $string, $arg1 ) {
     return "{$arg1} - {$string}";
 }
 add_filter( 'mjf_filter_excerpt', 'someFilterCallback', 10, 2 );
+
+// $hooks = array();
+// function all_hooks( $r ) {
+//     global $hooks;
+
+//     $line =  microtime(true)*10000 . ' ' . $r .  "\n";
+//     $hooks[] = $line;
+
+//     // return ;
+// }
+// add_action( 'all', 'all_hooks' );

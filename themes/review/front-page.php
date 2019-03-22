@@ -16,28 +16,7 @@
                 <?php bloginfo( 'name' ); ?>
             </a>
         </h1>
-
-        <?php
-            $nav_args = array(
-                'menu'          => 178,
-                'menu_class'    => 'site-header__nav-links',
-                'menu_id'       => 'site-header__nav-links',
-                'container'     => '',
-                // 'container_class' => 'site-header-nav',
-                // 'container_id'  => 'site-header-nav',
-                'fallback_cb'   => 'wp_page_menu',
-                'before'        => '<span class="before-link-markup">',
-                'after'         => '</span>',
-                'link_before'   => '',
-                'link_after'    => '',
-                'echo'          => true,
-                'depth'         => 1,
-                // 'walker'        => ???
-                'theme_location' => 'main_nav',
-                'items_wrap'    => '<ul class="%1$s" id="%2$s" data-custom="This is a custom attr">%3$s</ul>',
-                'item_spacing'  => 'preserve'
-            );
-        ?>
+        
         <nav id="site-header__nav" class="site-header__nav">
             <button class="responsive-nav-toggle">MENU</button>
             <?php // wp_nav_menu( $nav_args ); ?>
@@ -50,8 +29,6 @@
 
         <div class="template-label"><small>front-page.php</small></div>
 
-        <section id="primary" class="primary">
-            <h1>Loading posts...</h1>
-        </section>
+        <section id="primary" class="primary"></section>
 
 <?php get_footer(); ?>

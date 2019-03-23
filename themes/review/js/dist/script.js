@@ -106,14 +106,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var App = function App() {
   _classCallCheck(this, App);
 
-  this.router = new _routing_Router__WEBPACK_IMPORTED_MODULE_0__["default"]();
-  this.element = document.querySelector('#primary');
-  this.nav = new _Nav__WEBPACK_IMPORTED_MODULE_1__["default"](this.router); // this.initialComponent = this.router.getRoute() === 'home' ? 'Posts' : 'Not Found';
-  // this.initialEndpoint = this.router.getRoute() === 'home' ? 'posts' : null;
-  // this.router.setRoute( this.router.getRoute(), this.initialComponent, this.initialEndpoint );
-  // SANDBOX Component
+  this.router = new _routing_Router__WEBPACK_IMPORTED_MODULE_0__["default"](); // this.http = new Rest();
 
-  this.router.setRoute('sandbox', 'Sandbox', '');
+  this.element = document.querySelector('#primary');
+  this.nav = new _Nav__WEBPACK_IMPORTED_MODULE_1__["default"]();
+  this.initialComponent = this.router.getRoute() === 'home' ? 'Posts' : 'Not Found';
+  this.initialEndpoint = this.router.getRoute() === 'home' ? 'posts' : null;
+  this.router.setRoute(this.router.getRoute(), this.initialComponent, this.initialEndpoint); // SANDBOX Component
+  // this.router.setRoute( 'sandbox', 'Sandbox', '' );
 };
 
 
@@ -130,6 +130,8 @@ var App = function App() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BaseComponent; });
+/* harmony import */ var _helpers_Rest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helpers/Rest */ "./js/src/helpers/Rest.js");
+/* harmony import */ var _routing_Router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../routing/Router */ "./js/src/routing/Router.js");
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -144,26 +146,37 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+
+
+
 var BaseComponent =
 /*#__PURE__*/
 function () {
-  function BaseComponent(router) {
+  function BaseComponent() {
+    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
     _classCallCheck(this, BaseComponent);
 
+    this.http = new _helpers_Rest__WEBPACK_IMPORTED_MODULE_0__["default"]("".concat(_routing_Router__WEBPACK_IMPORTED_MODULE_1__["baseUrl"], "/wp-json/wp/v2"));
+    this.props = props; // this.router = router;
+
+    this.DOM = {};
     this.init = this.init.bind(this);
     this.mapLinkRoute = this.mapLinkRoute.bind(this);
     this.contentLoaded = this.contentLoaded.bind(this);
     this.cacheRouterLinks = this.cacheRouterLinks.bind(this);
-    this.bindRouterEvents = this.bindRouterEvents.bind(this);
-    this.init(router);
+    this.bindRouterEvents = this.bindRouterEvents.bind(this); // this.init( router );
+
+    this.onInit();
   }
 
   _createClass(BaseComponent, [{
     key: "init",
-    value: function init(router) {
-      this.router = router;
-      this.DOM = {};
+    value: function init() {// this.onInit();
     }
+  }, {
+    key: "onInit",
+    value: function onInit() {}
   }, {
     key: "contentLoaded",
     value: function contentLoaded($element) {
@@ -173,8 +186,8 @@ function () {
   }, {
     key: "contentFailed",
     value: function contentFailed(err, $element) {
-      console.log(err.response);
-      $element.innerHTML = '<h1>Whoops! Something went wrong...</h1>';
+      console.error('contentFailed: ', err);
+      $element.innerHTML = "<h1>".concat(err, "</h1>");
     }
   }, {
     key: "cacheRouterLinks",
@@ -200,7 +213,7 @@ function () {
           route = _event$target$dataset.route,
           component = _event$target$dataset.component,
           endpoint = _event$target$dataset.endpoint;
-      this.router.setRoute(route, component, endpoint);
+      this.props.router.setRoute(route, component, endpoint);
     }
   }]);
 
@@ -262,6 +275,7 @@ function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Nav; });
 /* harmony import */ var _BaseComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BaseComponent */ "./js/src/components/BaseComponent.js");
+/* harmony import */ var _routing_Router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../routing/Router */ "./js/src/routing/Router.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -282,17 +296,18 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var Nav =
 /*#__PURE__*/
 function (_BaseComponent) {
   _inherits(Nav, _BaseComponent);
 
-  function Nav(router) {
+  function Nav() {
     var _this;
 
     _classCallCheck(this, Nav);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Nav).call(this, router));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Nav).call(this));
     _this.element = document.querySelector('#site-header__nav');
     _this.navItems = [];
     _this.getNavPages = _this.getNavPages.bind(_assertThisInitialized(_this));
@@ -308,7 +323,7 @@ function (_BaseComponent) {
     value: function getNavPages() {
       var _this2 = this;
 
-      fetch("".concat(this.router.baseUrl, "/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc")).then(function (response) {
+      fetch("".concat(_routing_Router__WEBPACK_IMPORTED_MODULE_1__["baseUrl"], "/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc")).then(function (response) {
         return response.json();
       }).then(function (response) {
         _this2.navItems = response.filter(function (page) {
@@ -458,78 +473,75 @@ var Posts =
 function (_BaseComponent) {
   _inherits(Posts, _BaseComponent);
 
-  function Posts(router) {
+  function Posts() {
     var _this;
 
-    var endpoint = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'posts';
+    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, Posts);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Posts).call(this, router));
-    _this.apiUrl = "".concat(router.baseUrl, "/wp-json/wp/v2/").concat(endpoint);
-    _this.posts = [];
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Posts).call(this, props));
+    _this.posts = null;
     _this.element = document.querySelector('#primary');
-    _this.render = _this.render.bind(_assertThisInitialized(_this));
+    _this.onInit = _this.onInit.bind(_assertThisInitialized(_this));
     _this.cacheDom = _this.cacheDom.bind(_assertThisInitialized(_this));
-    _this.bindEvents = _this.bindEvents.bind(_assertThisInitialized(_this));
-    _this.handleClickPrimary = _this.handleClickPrimary.bind(_assertThisInitialized(_this));
-    _this.getPosts = _this.getPosts.bind(_assertThisInitialized(_this));
+    _this.bindEvents = _this.bindEvents.bind(_assertThisInitialized(_this)); // this.handleClickPrimary = this.handleClickPrimary.bind( this );
+
     _this.render = _this.render.bind(_assertThisInitialized(_this));
-
-    _this.getPosts();
-
     return _this;
   }
 
   _createClass(Posts, [{
+    key: "onInit",
+    value: function onInit() {
+      var _this2 = this;
+
+      this.http.getPosts().then(function (response) {
+        if (response.error) return _this2.contentFailed(response, _this2.element);
+        _this2.posts = response;
+
+        _this2.render();
+
+        _this2.cacheDom();
+
+        _this2.bindEvents();
+
+        _this2.contentLoaded(_this2.element);
+      }).catch(function (err) {
+        return _this2.contentFailed(err, _this2.element);
+      });
+    }
+  }, {
     key: "cacheDom",
-    value: function cacheDom() {
-      this.DOM.firstArticle = document.querySelector('.entry');
+    value: function cacheDom() {// this.DOM.firstArticle = document.querySelector( '.entry' );
     }
   }, {
     key: "bindEvents",
-    value: function bindEvents() {
-      var _this2 = this;
+    value: function bindEvents() {} // this.DOM.firstArticle.addEventListener( 'click', (e) => this.handleClickPrimary(e) );
+    // handleClickPrimary( event ) {
+    //     console.log( 'Primary clicked: ', event );
+    // }
 
-      this.DOM.firstArticle.addEventListener('click', function (e) {
-        return _this2.handleClickPrimary(e);
-      });
-    }
-  }, {
-    key: "getPosts",
-    value: function getPosts() {
-      var _this3 = this;
-
-      fetch(this.apiUrl).then(function (response) {
-        return response.json();
-      }).then(function (response) {
-        _this3.posts = response;
-
-        _this3.render(_this3.posts);
-
-        _this3.cacheDom();
-
-        _this3.bindEvents();
-
-        _this3.contentLoaded(_this3.element);
-      }).catch(function (err) {
-        return _this3.contentFailed(err, _this3.element);
-      });
-    }
-  }, {
-    key: "handleClickPrimary",
-    value: function handleClickPrimary(event) {
-      console.log('Primary clicked: ', event);
-    }
   }, {
     key: "render",
-    value: function render(posts) {
-      var _this4 = this;
+    value: function render() {
+      var _this3 = this;
 
       var content = '';
-      posts.forEach(function (post) {
-        content += "\n                <article class=\"entry\">\n                    <header class=\"entry__header\">\n                        <h2 class=\"entry__title\">\n                            <a href=\"".concat(post.link, "\" data-component=\"SinglePost\" data-route=\"").concat(post.slug, "\" data-endpoint=\"posts/").concat(post.id, "\">\n                                ").concat(post.title.rendered, "\n                            </a>\n                        </h2>\n                    </header>\n                    <main class=\"entry__body\">").concat(post.excerpt.rendered, "</main>\n                </article>\n            ");
-        _this4.element.innerHTML = content;
+
+      if (!this.posts) {
+        this.element.innerHTML = '<h1>Whoops! This page is broken...</h1>';
+        return;
+      }
+
+      if (this.posts && !this.posts.length) {
+        this.element.innerHTML = '<h1>There are currently no posts.</h1>';
+        return;
+      }
+
+      this.posts.forEach(function (post) {
+        content += "\n                <article class=\"entry\">\n                    <header class=\"entry__header\">\n                        <h2 class=\"entry__title\">\n                            <a href=\"".concat(post.link, "\" data-component=\"SinglePost\" data-route=\"").concat(post.slug, "\" data-endpoint=\"").concat(post.id, "?_embed\">\n                                ").concat(post.title.rendered, "\n                            </a>\n                        </h2>\n                    </header>\n                    <main class=\"entry__body\">").concat(post.excerpt.rendered, "</main>\n                </article>\n            ");
+        _this3.element.innerHTML = content;
       });
     }
   }]);
@@ -571,7 +583,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-// import { apiBase, apiGetPosts } from '../helpers/rest';
 
 
 
@@ -604,7 +615,7 @@ function (_BaseComponent) {
       this.http.getPosts({
         per_page: 5,
         order: 'asc'
-      }).then(function (response) {
+      }).then(function () {
         if (!_this2.http.posts.err) _this2.render();else console.log(_this2.http.posts.err);
       });
     }
@@ -644,9 +655,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -659,35 +670,30 @@ var SinglePost =
 function (_BaseComponent) {
   _inherits(SinglePost, _BaseComponent);
 
-  function SinglePost(router, endpoint) {
+  function SinglePost() {
     var _this;
+
+    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, SinglePost);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(SinglePost).call(this, router));
-    _this.endpoint = "".concat(router.baseUrl, "/wp-json/wp/v2/").concat(endpoint);
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(SinglePost).call(this, props));
     _this.element = document.querySelector('#primary');
-
-    _this.cacheDom();
-
-    _this.bindEvents();
-
-    _this.getPost();
-
+    _this.post = null;
+    _this.onInit = _this.onInit.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(SinglePost, [{
-    key: "getPost",
-    value: function getPost() {
+    key: "onInit",
+    value: function onInit() {
       var _this2 = this;
 
-      fetch(this.endpoint).then(function (response) {
-        return response.json();
-      }).then(function (response) {
+      this.http.getPost(this.props.endpoint).then(function (response) {
+        if (response.error) return _this2.contentFailed(response, _this2.element);
         _this2.post = response;
 
-        _this2.render(_this2.post);
+        _this2.render();
 
         _this2.cacheDom();
 
@@ -695,9 +701,7 @@ function (_BaseComponent) {
 
         _this2.contentLoaded(_this2.element);
       }).catch(function (err) {
-        console.log(err.response);
-
-        _this2.contentFailed(_this2.element);
+        return _this2.contentFailed(err, _this2.element);
       });
     }
   }, {
@@ -708,8 +712,13 @@ function (_BaseComponent) {
     value: function bindEvents() {}
   }, {
     key: "render",
-    value: function render(post) {
-      this.element.innerHTML = "\n            <article class=\"entry\">\n                <header class=\"entry__header\">\n                    <h2 class=\"entry__title\">\n                        <a href=\"".concat(post.link, "\" data-component=\"SinglePost\" data-route=\"").concat(post.slug, "\" data-endpoint=\"posts/").concat(post.id, "\">\n                            ").concat(post.title.rendered, "\n                        </a>\n                    </h2>\n                </header>\n                <main class=\"entry__body\">").concat(post.content.rendered, "</main>\n            </article>\n        ");
+    value: function render() {
+      if (!this.post) {
+        this.element.innerHTML = '<h1>Whoops! This page is broken...</h1>';
+        return;
+      }
+
+      this.element.innerHTML = "\n            <article class=\"entry\">\n                <header class=\"entry__header\">\n                    <h2 class=\"entry__title\">\n                        <a href=\"".concat(this.post.link, "\" data-component=\"SinglePost\" data-route=\"").concat(this.post.slug, "\" data-endpoint=\"posts/").concat(this.post.id, "\">\n                            ").concat(this.post.title.rendered, "\n                        </a>\n                    </h2>\n                </header>\n                <main class=\"entry__body\">").concat(this.post.content.rendered, "</main>\n            </article>\n        ");
     }
   }]);
 
@@ -744,12 +753,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Rest =
 /*#__PURE__*/
 function () {
-  function Rest() {
+  function Rest(baseUrl) {
     _classCallCheck(this, Rest);
 
-    this.baseUrl = 'http://localhost:8888/wpsandbox/wp-json/wp/v2';
-    this.baseRoute = '';
-    this.queryParams = [];
+    this.baseUrl = baseUrl;
     this.posts = null;
     this.post = null;
     this.postRevisions = null;
@@ -764,32 +771,76 @@ function () {
     this.postTypes = null;
     this.postStatuses = null;
     this.settings = null;
+    this.getPosts = this.getPosts.bind(this);
   }
 
   _createClass(Rest, [{
     key: "getPosts",
     value: function getPosts(args) {
-      var _this = this;
-
-      this.baseRoute = 'posts';
+      var baseRoute = 'posts';
+      var queryParams = [];
 
       if (args && _typeof(args) === 'object') {
         for (var arg in args) {
-          this.queryParams.push("".concat(arg, "=").concat(args[arg]));
+          queryParams.push("".concat(arg, "=").concat(args[arg]));
         }
       }
 
-      var url = "".concat(this.baseUrl, "/").concat(this.baseRoute, "?").concat(this.queryParams.join('&'));
+      var url = queryParams.length ? "".concat(this.baseUrl, "/").concat(baseRoute, "?").concat(queryParams.join('&')) : "".concat(this.baseUrl, "/").concat(baseRoute);
       return fetch(url).then(function (response) {
-        return response.json();
-      }).then(function (response) {
-        return _this.posts = response;
+        if (response.ok) return response.json();else throw new Error(response.statusText);
       }).catch(function (err) {
-        return _this.posts = {
-          err: err
-        };
+        console.error('Rest.getPosts() error: ', err);
+        err.error = true;
+        return err;
       });
     }
+  }, {
+    key: "getPost",
+    value: function getPost(args) {
+      var baseRoute = "posts/".concat(args); // let queryParams = [];
+      // if ( args && typeof args === 'object' ) {
+      //     for ( let arg in args ) {
+      //         queryParams.push( `${arg}=${args[arg]}` );
+      //     }
+      // }
+
+      var url = "".concat(this.baseUrl, "/").concat(baseRoute); // const url = queryParams.length 
+      //     ? `${this.baseUrl}/${baseRoute}?${queryParams.join('&')}`
+      //     : `${this.baseUrl}/${baseRoute}`;
+
+      return fetch(url).then(function (response) {
+        if (response.ok) return response.json();else throw new Error(response.statusText);
+      }).catch(function (err) {
+        console.error('Rest.getPost() error: ', err);
+        err.error = true;
+        return err;
+      });
+    }
+  }, {
+    key: "createPost",
+    value: function createPost() {}
+  }, {
+    key: "updatePost",
+    value: function updatePost() {}
+  }, {
+    key: "deletePost",
+    value: function deletePost() {}
+  }, {
+    key: "getPages",
+    value: function getPages() {}
+  }, {
+    key: "getPage",
+    value: function getPage() {}
+  }, {
+    key: "createPage",
+    value: function createPage() {}
+  }, {
+    key: "updatePage",
+    value: function updatePage() {}
+  }, {
+    key: "deletePage",
+    value: function deletePage() {}
   }]);
 
   return Rest;
@@ -870,12 +921,13 @@ var app = new _components_App__WEBPACK_IMPORTED_MODULE_1__["default"](apiRoot);
 /*!**********************************!*\
   !*** ./js/src/routing/Router.js ***!
   \**********************************/
-/*! exports provided: default */
+/*! exports provided: default, baseUrl */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Router; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "baseUrl", function() { return baseUrl; });
 /* harmony import */ var _components_Sandbox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Sandbox */ "./js/src/components/Sandbox.js");
 /* harmony import */ var _components_Posts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Posts */ "./js/src/components/Posts.js");
 /* harmony import */ var _components_SinglePost__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/SinglePost */ "./js/src/components/SinglePost.js");
@@ -939,8 +991,12 @@ function () {
   }, {
     key: "setView",
     value: function setView(component, endpoint) {
+      var props = {
+        router: this,
+        endpoint: endpoint
+      };
       this.currentView = component;
-      this.currentViewInstance = new this.views[component](this, endpoint);
+      this.currentViewInstance = new this.views[component](props);
       this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
     }
   }, {
@@ -952,8 +1008,11 @@ function () {
     key: "handleBrowserNav",
     value: function handleBrowserNav(event) {
       var route = event.path[0].location.hash.split('#/')[1];
-      var endpoint = event.path[0].history.state.endpoint;
-      this.setRoute(route, this.browsingHistoryMap[route], endpoint);
+      var props = {
+        router: this,
+        endpoint: event.path[0].history.state.endpoint
+      };
+      this.setRoute(route, this.browsingHistoryMap[route], props);
     }
   }]);
 
@@ -961,6 +1020,7 @@ function () {
 }();
 
 
+var baseUrl = 'http://localhost:8888/wpsandbox';
 
 /***/ }),
 

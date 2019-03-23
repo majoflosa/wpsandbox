@@ -46,8 +46,10 @@ export default class Router {
     }
 
     setView( component, endpoint ) {
+        const props = { router: this, endpoint: endpoint };
+
         this.currentView = component;
-        this.currentViewInstance = new this.views[component]( this, endpoint );
+        this.currentViewInstance = new this.views[component]( props );
         this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
     }
 
@@ -57,7 +59,9 @@ export default class Router {
 
     handleBrowserNav( event ) {
         const route = event.path[0].location.hash.split('#/')[1];
-        const endpoint = event.path[0].history.state.endpoint;
-        this.setRoute( route, this.browsingHistoryMap[route], endpoint );
+        const props = { router: this, endpoint: event.path[0].history.state.endpoint };
+        this.setRoute( route, this.browsingHistoryMap[route], props );
     }
 }
+
+export const baseUrl = 'http://localhost:8888/wpsandbox';

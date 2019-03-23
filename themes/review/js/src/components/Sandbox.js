@@ -1,4 +1,3 @@
-// import { apiBase, apiGetPosts } from '../helpers/rest';
 import Rest from '../helpers/Rest';
 import BaseComponent from './BaseComponent';
 
@@ -16,7 +15,7 @@ export default class Sandbox extends BaseComponent {
 
     fetchData() {
         this.http.getPosts({ per_page: 5, order: 'asc' })
-            .then( response => {
+            .then( () => {
                 if ( !this.http.posts.err ) this.render();
                 else console.log( this.http.posts.err );
             });

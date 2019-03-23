@@ -1,8 +1,9 @@
 import BaseComponent from './BaseComponent';
+import { baseUrl } from '../routing/Router';
 
 export default class Nav extends BaseComponent {
-    constructor( router ) {
-        super( router );
+    constructor() {
+        super();
 
         this.element = document.querySelector( '#site-header__nav' );
         this.navItems = [];
@@ -14,7 +15,7 @@ export default class Nav extends BaseComponent {
     }
     
     getNavPages() {
-        fetch( `${this.router.baseUrl}/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc` )
+        fetch( `${baseUrl}/wp-json/wp/v2/pages?per_page=100&orderby=menu_order&order=asc` )
         .then( response => response.json() )
         .then( response => {
             this.navItems = response.filter( page => {

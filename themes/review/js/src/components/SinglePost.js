@@ -1,52 +1,49 @@
 import BaseComponent from './BaseComponent';
 
 export default class SinglePost extends BaseComponent {
-    constructor( router, endpoint ) {
-        super( router );
-
-        this.endpoint = `${router.baseUrl}/wp-json/wp/v2/${endpoint}`
-        this.element = document.querySelector( '#primary' );
-
-        this.cacheDom();
-        this.bindEvents();
+    constructor( props = {} ) {
+        super( props );
         
-        this.getPost();
+        this.element = document.querySelector( '#primary' );
+        this.post = null;
+        
+        this.onInit = this.onInit.bind( this );
     }
 
-    getPost() {
-        fetch( this.endpoint )
-            .then( response => response.json() )
+    onInit() {
+        this.http.getPost( this.props.endpoint )
             .then( response => {
+                if ( response.error ) return this.contentFailed( response, this.element );
+                
                 this.post = response;
-                this.render( this.post );
-
+                this.render();
                 this.cacheDom();
                 this.bindEvents();
-
                 this.contentLoaded( this.element );
             })
-            .catch( err => {
-                console.log(err.response);
-                this.contentFailed( this.element );
-            });
+            .catch( err => this.contentFailed( err, this.element ) )
     }
 
-    cacheDom() {
-    }
+    cacheDom() {}
 
     bindEvents() {}
 
-    render( post ) {
+    render() {
+        if ( !this.post ) {
+            this.element.innerHTML = '<h1>Whoops! This page is broken...</h1>';
+            return;
+        }
+
         this.element.innerHTML = `
             <article class="entry">
                 <header class="entry__header">
                     <h2 class="entry__title">
-                        <a href="${post.link}" data-component="SinglePost" data-route="${post.slug}" data-endpoint="posts/${post.id}">
-                            ${post.title.rendered}
+                        <a href="${this.post.link}" data-component="SinglePost" data-route="${this.post.slug}" data-endpoint="posts/${this.post.id}">
+                            ${this.post.title.rendered}
                         </a>
                     </h2>
                 </header>
-                <main class="entry__body">${post.content.rendered}</main>
+                <main class="entry__body">${this.post.content.rendered}</main>
             </article>
         `;
     }

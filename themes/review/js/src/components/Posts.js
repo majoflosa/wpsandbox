@@ -1,58 +1,64 @@
 import BaseComponent from './BaseComponent';
 
 export default class Posts extends BaseComponent {
-    constructor( router, endpoint = 'posts') {
-        super( router );
+    constructor( props = {} ) {
+        super( props );
 
-        this.apiUrl = `${router.baseUrl}/wp-json/wp/v2/${endpoint}`;
-        this.posts = [];
+        this.posts = null;
         this.element = document.querySelector( '#primary' );
 
-        this.render = this.render.bind( this );
+        this.onInit = this.onInit.bind( this );
         this.cacheDom = this.cacheDom.bind( this );
         this.bindEvents = this.bindEvents.bind( this );
-        this.handleClickPrimary = this.handleClickPrimary.bind( this );
-        this.getPosts = this.getPosts.bind( this );
+        // this.handleClickPrimary = this.handleClickPrimary.bind( this );
         this.render = this.render.bind( this );
+    }
 
-        this.getPosts();
+    onInit() {
+        this.http.getPosts()
+            .then( response => {
+                if ( response.error ) return this.contentFailed( response, this.element );
+                
+                this.posts = response;
+                this.render();
+                this.cacheDom();
+                this.bindEvents();
+                this.contentLoaded( this.element );
+            })
+            .catch( err => this.contentFailed( err, this.element ) )
     }
 
     cacheDom() {
-        this.DOM.firstArticle = document.querySelector( '.entry' );
+        // this.DOM.firstArticle = document.querySelector( '.entry' );
     }
 
     bindEvents() {
-        this.DOM.firstArticle
-            .addEventListener( 'click', (e) => this.handleClickPrimary(e) );
+        // this.DOM.firstArticle.addEventListener( 'click', (e) => this.handleClickPrimary(e) );
     }
 
-    getPosts() {
-        fetch( this.apiUrl )
-            .then( response => response.json() )
-            .then( response => {
-                this.posts = response;
-                this.render( this.posts );
-                this.cacheDom();
-                this.bindEvents();
+    // handleClickPrimary( event ) {
+    //     console.log( 'Primary clicked: ', event );
+    // }
 
-                this.contentLoaded( this.element );
-            })
-            .catch( err => this.contentFailed(err, this.element) );
-    }
-
-    handleClickPrimary( event ) {
-        console.log( 'Primary clicked: ', event );
-    }
-
-    render( posts ) {
+    render() {
         let content = '';
-        posts.forEach( post => {
+
+        if ( !this.posts ) {
+            this.element.innerHTML = '<h1>Whoops! This page is broken...</h1>';
+            return;
+        }
+        
+        if ( this.posts && !this.posts.length ) {
+            this.element.innerHTML = '<h1>There are currently no posts.</h1>';
+            return;
+        }
+
+        this.posts.forEach( post => {
             content += `
                 <article class="entry">
                     <header class="entry__header">
                         <h2 class="entry__title">
-                            <a href="${post.link}" data-component="SinglePost" data-route="${post.slug}" data-endpoint="posts/${post.id}">
+                            <a href="${post.link}" data-component="SinglePost" data-route="${post.slug}" data-endpoint="${post.id}?_embed">
                                 ${post.title.rendered}
                             </a>
                         </h2>

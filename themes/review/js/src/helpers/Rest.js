@@ -1,8 +1,7 @@
 export default class Rest {
-    constructor() {
-        this.baseUrl = 'http://localhost:8888/wpsandbox/wp-json/wp/v2';
-        this.baseRoute = '';
-        this.queryParams = [];
+    constructor( baseUrl ) {
+        this.baseUrl = baseUrl;
+
         this.posts = null;
         this.post = null;
         this.postRevisions = null;
@@ -17,23 +16,79 @@ export default class Rest {
         this.postTypes = null;
         this.postStatuses = null;
         this.settings = null;
+
+        this.getPosts = this.getPosts.bind( this );
     }
 
     getPosts( args ) {
-        this.baseRoute = 'posts';
+        const baseRoute = 'posts';
         
+        let queryParams = [];
         if ( args && typeof args === 'object' ) {
             for ( let arg in args ) {
-                this.queryParams.push( `${arg}=${args[arg]}` );
+                queryParams.push( `${arg}=${args[arg]}` );
             }
         }
         
-        const url = `${this.baseUrl}/${this.baseRoute}?${this.queryParams.join('&')}`;
+        const url = queryParams.length 
+            ? `${this.baseUrl}/${baseRoute}?${queryParams.join('&')}`
+            : `${this.baseUrl}/${baseRoute}`;
+            
         return fetch( url )
-            .then( response => response.json() )
-            .then( response => this.posts = response )
-            .catch( err => this.posts = { err } );
+            .then( response => {
+                if ( response.ok ) return response.json();
+                else throw new Error( response.statusText );
+            })
+            .catch( err => {
+                console.error( 'Rest.getPosts() error: ', err );
+                err.error = true;
+                return err;
+            });
     }
+
+    getPost( args ) {
+        const baseRoute = `posts/${args}`;
+        
+        // let queryParams = [];
+        // if ( args && typeof args === 'object' ) {
+        //     for ( let arg in args ) {
+        //         queryParams.push( `${arg}=${args[arg]}` );
+        //     }
+        // }
+        
+        const url = `${this.baseUrl}/${baseRoute}`;
+        // const url = queryParams.length 
+        //     ? `${this.baseUrl}/${baseRoute}?${queryParams.join('&')}`
+        //     : `${this.baseUrl}/${baseRoute}`;
+            
+        return fetch( url )
+            .then( response => {
+                if ( response.ok ) return response.json();
+                else throw new Error( response.statusText );
+            })
+            .catch( err => {
+                console.error( 'Rest.getPost() error: ', err );
+                err.error = true;
+                return err;
+            });
+    }
+
+    createPost() {}
+
+    updatePost() {}
+
+    deletePost() {}
+
+
+    getPages() {}
+
+    getPage() {}
+
+    createPage() {}
+
+    updatePage() {}
+
+    deletePage() {}
 }
 
 

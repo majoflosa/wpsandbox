@@ -1,18 +1,28 @@
+import Rest from '../helpers/Rest';
+import Router, { baseUrl } from '../routing/Router';
+
 export default class BaseComponent {
-    constructor( router ) {
+    constructor( props = {} ) {
+        this.http = new Rest( `${baseUrl}/wp-json/wp/v2` );
+        this.props = props;
+        // this.router = router;
+        this.DOM = {};
+
         this.init = this.init.bind( this );
         this.mapLinkRoute = this.mapLinkRoute.bind( this );
         this.contentLoaded = this.contentLoaded.bind( this );
         this.cacheRouterLinks = this.cacheRouterLinks.bind( this );
         this.bindRouterEvents = this.bindRouterEvents.bind( this );
 
-        this.init( router );
+        // this.init( router );
+        this.onInit();
     }
 
-    init( router ) {
-        this.router = router;
-        this.DOM = {};
+    init() {
+        // this.onInit();
     }
+
+    onInit() {}
 
     contentLoaded( $element ) {
         this.cacheRouterLinks( $element );
@@ -20,8 +30,8 @@ export default class BaseComponent {
     }
 
     contentFailed( err, $element ) {
-        console.log( err.response );
-        $element.innerHTML = '<h1>Whoops! Something went wrong...</h1>'
+        console.error( 'contentFailed: ', err );
+        $element.innerHTML = `<h1>${err}</h1>`
     }
 
     cacheRouterLinks( $element ) {
@@ -38,6 +48,6 @@ export default class BaseComponent {
         event.preventDefault();
 
         const { route, component, endpoint } = event.target.dataset;
-        this.router.setRoute( route, component, endpoint );
+        this.props.router.setRoute( route, component, endpoint );
     }
 }

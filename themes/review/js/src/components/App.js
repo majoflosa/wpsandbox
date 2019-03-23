@@ -4,7 +4,6 @@ import Nav from './Nav';
 export default class App {
     constructor() {
         this.router = new Router();
-        // this.http = new Rest();
         this.element = document.querySelector( '#primary' );
 
         this.nav = new Nav();

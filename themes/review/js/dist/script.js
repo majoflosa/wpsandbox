@@ -106,8 +106,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var App = function App() {
   _classCallCheck(this, App);
 
-  this.router = new _routing_Router__WEBPACK_IMPORTED_MODULE_0__["default"](); // this.http = new Rest();
-
+  this.router = new _routing_Router__WEBPACK_IMPORTED_MODULE_0__["default"]();
   this.element = document.querySelector('#primary');
   this.nav = new _Nav__WEBPACK_IMPORTED_MODULE_1__["default"]();
   this.initialComponent = this.router.getRoute() === 'home' ? 'Posts' : 'Not Found';
@@ -158,22 +157,19 @@ function () {
     _classCallCheck(this, BaseComponent);
 
     this.http = new _helpers_Rest__WEBPACK_IMPORTED_MODULE_0__["default"]("".concat(_routing_Router__WEBPACK_IMPORTED_MODULE_1__["baseUrl"], "/wp-json/wp/v2"));
-    this.props = props; // this.router = router;
-
+    this.props = props;
     this.DOM = {};
     this.init = this.init.bind(this);
     this.mapLinkRoute = this.mapLinkRoute.bind(this);
     this.contentLoaded = this.contentLoaded.bind(this);
     this.cacheRouterLinks = this.cacheRouterLinks.bind(this);
-    this.bindRouterEvents = this.bindRouterEvents.bind(this); // this.init( router );
-
+    this.bindRouterEvents = this.bindRouterEvents.bind(this);
     this.onInit();
   }
 
   _createClass(BaseComponent, [{
     key: "init",
-    value: function init() {// this.onInit();
-    }
+    value: function init() {}
   }, {
     key: "onInit",
     value: function onInit() {}
@@ -485,8 +481,7 @@ function (_BaseComponent) {
     _this.element = document.querySelector('#primary');
     _this.onInit = _this.onInit.bind(_assertThisInitialized(_this));
     _this.cacheDom = _this.cacheDom.bind(_assertThisInitialized(_this));
-    _this.bindEvents = _this.bindEvents.bind(_assertThisInitialized(_this)); // this.handleClickPrimary = this.handleClickPrimary.bind( this );
-
+    _this.bindEvents = _this.bindEvents.bind(_assertThisInitialized(_this));
     _this.render = _this.render.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -513,15 +508,10 @@ function (_BaseComponent) {
     }
   }, {
     key: "cacheDom",
-    value: function cacheDom() {// this.DOM.firstArticle = document.querySelector( '.entry' );
-    }
+    value: function cacheDom() {}
   }, {
     key: "bindEvents",
-    value: function bindEvents() {} // this.DOM.firstArticle.addEventListener( 'click', (e) => this.handleClickPrimary(e) );
-    // handleClickPrimary( event ) {
-    //     console.log( 'Primary clicked: ', event );
-    // }
-
+    value: function bindEvents() {}
   }, {
     key: "render",
     value: function render() {
@@ -681,6 +671,9 @@ function (_BaseComponent) {
     _this.element = document.querySelector('#primary');
     _this.post = null;
     _this.onInit = _this.onInit.bind(_assertThisInitialized(_this));
+    _this.cacheDom = _this.cacheDom.bind(_assertThisInitialized(_this));
+    _this.bindEvents = _this.bindEvents.bind(_assertThisInitialized(_this));
+    _this.render = _this.render.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -757,21 +750,16 @@ function () {
     _classCallCheck(this, Rest);
 
     this.baseUrl = baseUrl;
-    this.posts = null;
-    this.post = null;
-    this.postRevisions = null;
-    this.categories = null;
-    this.tags = null;
-    this.pages = null;
-    this.page = null;
-    this.comments = null;
-    this.taxonomies = null;
-    this.media = null;
-    this.users = null;
-    this.postTypes = null;
-    this.postStatuses = null;
-    this.settings = null;
     this.getPosts = this.getPosts.bind(this);
+    this.getPost = this.getPost.bind(this);
+    this.createPost = this.createPost.bind(this);
+    this.updatePost = this.updatePost.bind(this);
+    this.deletePost = this.deletePost.bind(this);
+    this.getNavPages = this.getNavPages.bind(this);
+    this.getPages = this.getPages.bind(this);
+    this.createPage = this.createPage.bind(this);
+    this.updatePage = this.updatePage.bind(this);
+    this.deletePage = this.deletePage.bind(this);
   }
 
   _createClass(Rest, [{
@@ -798,17 +786,8 @@ function () {
   }, {
     key: "getPost",
     value: function getPost(args) {
-      var baseRoute = "posts/".concat(args); // let queryParams = [];
-      // if ( args && typeof args === 'object' ) {
-      //     for ( let arg in args ) {
-      //         queryParams.push( `${arg}=${args[arg]}` );
-      //     }
-      // }
-
-      var url = "".concat(this.baseUrl, "/").concat(baseRoute); // const url = queryParams.length 
-      //     ? `${this.baseUrl}/${baseRoute}?${queryParams.join('&')}`
-      //     : `${this.baseUrl}/${baseRoute}`;
-
+      var baseRoute = "posts/".concat(args);
+      var url = "".concat(this.baseUrl, "/").concat(baseRoute);
       return fetch(url).then(function (response) {
         if (response.ok) return response.json();else throw new Error(response.statusText);
       }).catch(function (err) {
@@ -826,6 +805,9 @@ function () {
   }, {
     key: "deletePost",
     value: function deletePost() {}
+  }, {
+    key: "getNavPages",
+    value: function getNavPages() {}
   }, {
     key: "getPages",
     value: function getPages() {}
@@ -845,6 +827,23 @@ function () {
 
   return Rest;
 }();
+/* 
+this.posts = null;
+this.post = null;
+this.postRevisions = null;
+this.categories = null;
+this.tags = null;
+this.pages = null;
+this.page = null;
+this.comments = null;
+this.taxonomies = null;
+this.media = null;
+this.users = null;
+this.postTypes = null;
+this.postStatuses = null;
+this.settings = null;
+*/
+
 
 
 var apiBase = 'http://localhost:8888/wpsandbox/wp-json//wp/v2/';
@@ -965,6 +964,9 @@ function () {
     };
     this.browsingHistoryMap = {};
     this.setRoute = this.setRoute.bind(this);
+    this.getRoute = this.getRoute.bind(this);
+    this.setView = this.setView.bind(this);
+    this.getView = this.getView.bind(this);
     this.handleBrowserNav = this.handleBrowserNav.bind(this);
     window.addEventListener('popstate', function (e) {
       return _this.handleBrowserNav(e);

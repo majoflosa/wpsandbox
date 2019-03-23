@@ -2,22 +2,16 @@ export default class Rest {
     constructor( baseUrl ) {
         this.baseUrl = baseUrl;
 
-        this.posts = null;
-        this.post = null;
-        this.postRevisions = null;
-        this.categories = null;
-        this.tags = null;
-        this.pages = null;
-        this.page = null;
-        this.comments = null;
-        this.taxonomies = null;
-        this.media = null;
-        this.users = null;
-        this.postTypes = null;
-        this.postStatuses = null;
-        this.settings = null;
-
         this.getPosts = this.getPosts.bind( this );
+        this.getPost = this.getPost.bind( this );
+        this.createPost = this.createPost.bind( this );
+        this.updatePost = this.updatePost.bind( this );
+        this.deletePost = this.deletePost.bind( this );
+        this.getNavPages = this.getNavPages.bind( this );
+        this.getPages = this.getPages.bind( this );
+        this.createPage = this.createPage.bind( this );
+        this.updatePage = this.updatePage.bind( this );
+        this.deletePage = this.deletePage.bind( this );
     }
 
     getPosts( args ) {
@@ -48,18 +42,7 @@ export default class Rest {
 
     getPost( args ) {
         const baseRoute = `posts/${args}`;
-        
-        // let queryParams = [];
-        // if ( args && typeof args === 'object' ) {
-        //     for ( let arg in args ) {
-        //         queryParams.push( `${arg}=${args[arg]}` );
-        //     }
-        // }
-        
         const url = `${this.baseUrl}/${baseRoute}`;
-        // const url = queryParams.length 
-        //     ? `${this.baseUrl}/${baseRoute}?${queryParams.join('&')}`
-        //     : `${this.baseUrl}/${baseRoute}`;
             
         return fetch( url )
             .then( response => {
@@ -80,6 +63,8 @@ export default class Rest {
     deletePost() {}
 
 
+    getNavPages() {}
+
     getPages() {}
 
     getPage() {}
@@ -93,7 +78,22 @@ export default class Rest {
 
 
 
-
+/* 
+this.posts = null;
+this.post = null;
+this.postRevisions = null;
+this.categories = null;
+this.tags = null;
+this.pages = null;
+this.page = null;
+this.comments = null;
+this.taxonomies = null;
+this.media = null;
+this.users = null;
+this.postTypes = null;
+this.postStatuses = null;
+this.settings = null;
+*/
 export const apiBase = 'http://localhost:8888/wpsandbox/wp-json//wp/v2/';
 export const resources = {
     posts: `posts`,

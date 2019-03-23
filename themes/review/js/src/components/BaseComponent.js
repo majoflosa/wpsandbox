@@ -5,7 +5,6 @@ export default class BaseComponent {
     constructor( props = {} ) {
         this.http = new Rest( `${baseUrl}/wp-json/wp/v2` );
         this.props = props;
-        // this.router = router;
         this.DOM = {};
 
         this.init = this.init.bind( this );
@@ -14,13 +13,10 @@ export default class BaseComponent {
         this.cacheRouterLinks = this.cacheRouterLinks.bind( this );
         this.bindRouterEvents = this.bindRouterEvents.bind( this );
 
-        // this.init( router );
         this.onInit();
     }
 
-    init() {
-        // this.onInit();
-    }
+    init() {}
 
     onInit() {}
 

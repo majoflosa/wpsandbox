@@ -10,7 +10,6 @@ export default class Posts extends BaseComponent {
         this.onInit = this.onInit.bind( this );
         this.cacheDom = this.cacheDom.bind( this );
         this.bindEvents = this.bindEvents.bind( this );
-        // this.handleClickPrimary = this.handleClickPrimary.bind( this );
         this.render = this.render.bind( this );
     }
 
@@ -28,17 +27,9 @@ export default class Posts extends BaseComponent {
             .catch( err => this.contentFailed( err, this.element ) )
     }
 
-    cacheDom() {
-        // this.DOM.firstArticle = document.querySelector( '.entry' );
-    }
+    cacheDom() {}
 
-    bindEvents() {
-        // this.DOM.firstArticle.addEventListener( 'click', (e) => this.handleClickPrimary(e) );
-    }
-
-    // handleClickPrimary( event ) {
-    //     console.log( 'Primary clicked: ', event );
-    // }
+    bindEvents() {}
 
     render() {
         let content = '';

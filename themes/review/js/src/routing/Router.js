@@ -21,6 +21,9 @@ export default class Router {
         this.browsingHistoryMap = {};
 
         this.setRoute = this.setRoute.bind( this );
+        this.getRoute = this.getRoute.bind( this );
+        this.setView = this.setView.bind( this );
+        this.getView = this.getView.bind( this );
         this.handleBrowserNav = this.handleBrowserNav.bind( this );
         
         window.addEventListener( 'popstate', (e) => this.handleBrowserNav(e) );

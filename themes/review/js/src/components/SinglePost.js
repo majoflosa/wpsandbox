@@ -8,6 +8,9 @@ export default class SinglePost extends BaseComponent {
         this.post = null;
         
         this.onInit = this.onInit.bind( this );
+        this.cacheDom = this.cacheDom.bind( this );
+        this.bindEvents = this.bindEvents.bind( this );
+        this.render = this.render.bind( this );
     }
 
     onInit() {

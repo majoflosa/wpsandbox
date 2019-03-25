@@ -40,20 +40,21 @@ export default class Rest {
             });
     }
 
-    getPost( args ) {
+    
+
+    async getPost( args ) {
         const baseRoute = `posts/${args}`;
         const url = `${this.baseUrl}/${baseRoute}`;
-            
-        return fetch( url )
-            .then( response => {
-                if ( response.ok ) return response.json();
-                else throw new Error( response.statusText );
-            })
-            .catch( err => {
-                console.error( 'Rest.getPost() error: ', err );
-                err.error = true;
-                return err;
-            });
+
+        try {
+            const response = await fetch( url );
+            if ( response.ok ) return response.json();
+            else throw new Error( response.statusText );
+        } catch( err ) {
+            console.error( 'Rest.getPost error: ', err );
+            err.error = true;
+            return err;
+        }
     }
 
     createPost() {}

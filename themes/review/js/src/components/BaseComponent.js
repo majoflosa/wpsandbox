@@ -3,6 +3,7 @@ import Router, { baseUrl } from '../routing/Router';
 
 export default class BaseComponent {
     constructor( props = {} ) {
+        // Rest should only be invoked once; placing it here means there's an instance for every component
         this.http = new Rest( `${baseUrl}/wp-json/wp/v2` );
         this.props = props;
         this.DOM = {};

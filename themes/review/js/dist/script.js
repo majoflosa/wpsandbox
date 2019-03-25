@@ -108,11 +108,12 @@ var App = function App() {
 
   this.router = new _routing_Router__WEBPACK_IMPORTED_MODULE_0__["default"]();
   this.element = document.querySelector('#primary');
-  this.nav = new _Nav__WEBPACK_IMPORTED_MODULE_1__["default"]();
-  this.initialComponent = this.router.getRoute() === 'home' ? 'Posts' : 'Not Found';
-  this.initialEndpoint = this.router.getRoute() === 'home' ? 'posts' : null;
-  this.router.setRoute(this.router.getRoute(), this.initialComponent, this.initialEndpoint); // SANDBOX Component
-  // this.router.setRoute( 'sandbox', 'Sandbox', '' );
+  this.nav = new _Nav__WEBPACK_IMPORTED_MODULE_1__["default"](); // this.initialComponent = this.router.getRoute() === 'home' ? 'Posts' : 'Not Found';
+  // this.initialEndpoint = this.router.getRoute() === 'home' ? 'posts' : null;
+  // this.router.setRoute( this.router.getRoute(), this.initialComponent, this.initialEndpoint );
+  // SANDBOX Component
+
+  this.router.setRoute('sandbox', 'Sandbox', '');
 };
 
 
@@ -156,6 +157,7 @@ function () {
 
     _classCallCheck(this, BaseComponent);
 
+    // Rest should only be invoked once; placing it here means there's an instance for every component
     this.http = new _helpers_Rest__WEBPACK_IMPORTED_MODULE_0__["default"]("".concat(_routing_Router__WEBPACK_IMPORTED_MODULE_1__["baseUrl"], "/wp-json/wp/v2"));
     this.props = props;
     this.DOM = {};
@@ -557,6 +559,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _BaseComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BaseComponent */ "./js/src/components/BaseComponent.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -587,33 +593,146 @@ function (_BaseComponent) {
     _classCallCheck(this, Sandbox);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Sandbox).call(this, router));
-    _this.element = document.querySelector('#primary');
-    _this.http = new _helpers_Rest__WEBPACK_IMPORTED_MODULE_0__["default"]();
-    _this.fetchData = _this.fetchData.bind(_assertThisInitialized(_this));
-    _this.render = _this.render.bind(_assertThisInitialized(_this));
+    _this.element = document.querySelector('#primary'); // this.http = new Rest();
 
-    _this.fetchData();
+    _this.data = null;
+    _this.baseUrl = 'http://localhost:8888/wpsandbox/wp-json/wp/v2'; // this.authenticate = this.authenticate.bind( this );
+
+    _this.fetchData = _this.fetchData.bind(_assertThisInitialized(_this));
+    _this.postData = _this.postData.bind(_assertThisInitialized(_this));
+    _this.render = _this.render.bind(_assertThisInitialized(_this)); // this.authenticate();
+    // this.fetchData();
+    // this.postData();
+
+    _this.render();
+
+    _this.cacheDom();
+
+    _this.bindEvents();
 
     return _this;
   }
 
   _createClass(Sandbox, [{
-    key: "fetchData",
-    value: function fetchData() {
+    key: "onInit",
+    value: function onInit() {}
+  }, {
+    key: "cacheDom",
+    value: function cacheDom() {
+      this.DOM.button = document.querySelector('#create-post');
+    }
+  }, {
+    key: "bindEvents",
+    value: function bindEvents() {
       var _this2 = this;
 
-      this.http.getPosts({
-        per_page: 5,
-        order: 'asc'
-      }).then(function () {
-        if (!_this2.http.posts.err) _this2.render();else console.log(_this2.http.posts.err);
+      this.DOM.button.addEventListener('click', function () {
+        return _this2.postData();
       });
     }
   }, {
+    key: "fetchData",
+    value: function () {
+      var _fetchData = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        var data;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return fetch('http://localhost:8888/wpsandbox/wp-json/wp/v2/posts');
+
+              case 3:
+                data = _context.sent;
+                _context.next = 6;
+                return data.json();
+
+              case 6:
+                data = _context.sent;
+                console.log('response: ', data);
+                _context.next = 13;
+                break;
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](0);
+                console.log(_context.t0);
+
+              case 13:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 10]]);
+      }));
+
+      function fetchData() {
+        return _fetchData.apply(this, arguments);
+      }
+
+      return fetchData;
+    }()
+  }, {
+    key: "postData",
+    value: function () {
+      var _postData = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee2() {
+        var response;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return fetch("".concat(this.baseUrl, "/posts"), {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'accept': 'application/json',
+                    // 'Authorization': wpSettings.nonce, 
+                    'X-WP-Nonce': wpSettings.nonce
+                  },
+                  body: JSON.stringify({
+                    title: 'Post via REST API',
+                    content: 'Testing post creation with REST',
+                    status: 'publish'
+                  })
+                });
+
+              case 3:
+                response = _context2.sent;
+                response = response.json();
+                console.log('post response: ', response);
+                _context2.next = 11;
+                break;
+
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 8]]);
+      }));
+
+      function postData() {
+        return _postData.apply(this, arguments);
+      }
+
+      return postData;
+    }()
+  }, {
     key: "render",
     value: function render() {
-      this.element.innerHTML = '<h1>Sandbox</h1>';
-      console.log(this.http.posts);
+      this.element.innerHTML = "\n            <h1>Sandbox</h1>\n            <button id=\"create-post\">Create Post</button>\n        ";
     }
   }]);
 
@@ -1044,8 +1163,7 @@ function () {
         endpoint: endpoint
       };
       this.currentView = component;
-      this.currentViewInstance = new this.views[component](props);
-      this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
+      this.currentViewInstance = new this.views[component](props); // this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
     }
   }, {
     key: "getView",

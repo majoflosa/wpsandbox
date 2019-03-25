@@ -53,7 +53,7 @@ export default class Router {
 
         this.currentView = component;
         this.currentViewInstance = new this.views[component]( props );
-        this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
+        // this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
     }
 
     getView() {

@@ -16,10 +16,12 @@ if ( have_posts() ) :
         </header>
 
         <main class="entry__body">
+            <hr>
             <?php the_content(); ?>
         </main>
 
         <footer class="entry__footer">
+            <hr>
             <?php 
                 the_time( get_option('date_format') ); 
                 edit_post_link();    
@@ -27,25 +29,17 @@ if ( have_posts() ) :
         </footer>
     </article>
 
-    <?php if ( comments_open() ) : ?>
-    <div class="comments">
-        <div class="comments__form">
-            <?php comment_form(); ?>
-        </div>
-        <div class="comments__list">
-            <h3>Comments</h3>
-            <?php if ( get_comments_number() ) : ?>
-                <p># of comments: <?php echo get_comments_number(); ?></p>
-                <?php wp_list_comments( 
-                    array('echo' => true), 
-                    get_comments( array('post_id' => get_the_ID() ) ) 
-                ); ?>
-            <?php else : ?>
-                <p>There are no comments for this article.</p>
-            <?php endif; ?>
-        </div>
-    </div>
-    <?php endif; ?>
+    <?php 
+        $post_nav_args = array(
+            'prev_text' => '« %title',
+            'next_text' => '%title »'
+        );
+
+        the_post_navigation( $post_nav_args ); 
+    ?>
+    
+    <?php comments_template(); ?>
+    
 
 <?php
     endwhile;

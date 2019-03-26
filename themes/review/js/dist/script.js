@@ -587,14 +587,13 @@ var Sandbox =
 function (_BaseComponent) {
   _inherits(Sandbox, _BaseComponent);
 
-  function Sandbox(router) {
+  function Sandbox(props) {
     var _this;
 
     _classCallCheck(this, Sandbox);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Sandbox).call(this, router));
-    _this.element = document.querySelector('#primary'); // this.http = new Rest();
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Sandbox).call(this, props));
+    _this.element = document.querySelector('#primary');
     _this.data = null;
     _this.baseUrl = 'http://localhost:8888/wpsandbox/wp-json/wp/v2'; // this.authenticate = this.authenticate.bind( this );
 

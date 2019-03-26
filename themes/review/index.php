@@ -8,6 +8,10 @@
 
 <section id="primary" class="primary">
 
+<div class="posts-navigation posts-navigation-top">
+    <?php review_basic_posts_navigation(); ?>
+</div>
+
 <?php
 
     if ( have_posts() ) {
@@ -35,7 +39,7 @@
  * single_post_title(),
  * the_ID(),
  * the_title(), get_the_title(), the_title_rss(), the_title_attribute()
- * the_permalink(), get_permalink(), get_post_permalink(), permalinkk_anchor()
+ * the_permalink(), get_permalink(), get_post_permalink(), permalink_anchor()
  * has_post_thumbnail(), the_post_thumbnail(), get_the_post_thumbnail(), get_post_thumbnail_id()
  * the_content(), the_content_rss(), the_excerpt(), the_excerpt_rss()
  * the_date(), get_the_date(), the_date_xml(), the_time(), single_month_title()
@@ -59,6 +63,15 @@
         esc_html_e( 'There are currently no posts.' );
     }
 ?>
+
+<div class="posts-navigation posts-navigation-bottom">
+    <?php
+        the_posts_pagination();
+        // previous_posts_link();
+        // echo ' | ';
+        // next_posts_link();
+    ?>
+</div>
 
 </section>
 

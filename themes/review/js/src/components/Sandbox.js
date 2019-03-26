@@ -2,10 +2,9 @@ import Rest from '../helpers/Rest';
 import BaseComponent from './BaseComponent';
 
 export default class Sandbox extends BaseComponent {
-    constructor( router ) {
-        super( router );
+    constructor( props ) {
+        super( props );
         this.element = document.querySelector( '#primary' );
-        // this.http = new Rest();
         this.data = null;
         this.baseUrl = 'http://localhost:8888/wpsandbox/wp-json/wp/v2';
 
@@ -17,10 +16,10 @@ export default class Sandbox extends BaseComponent {
         // this.authenticate();
         // this.fetchData();
         // this.postData();
+        
         this.render();
         this.cacheDom();
         this.bindEvents();
-        
     }
     
     onInit() {

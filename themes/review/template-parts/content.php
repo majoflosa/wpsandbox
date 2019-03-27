@@ -9,7 +9,13 @@
                     '</a></h2>' 
                 ); 
             }
+        ?>
+            
+            <div class="entry__by-line">
+                by <a href="" class="entry__author"><?php the_author_link(); ?></a>
+            </div>
 
+        <?php
             if ( has_post_thumbnail() ) {
                 // sizes: thumbnail, medium, medium_large, large, full
                 the_post_thumbnail( 'medium' );

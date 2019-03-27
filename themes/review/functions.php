@@ -71,20 +71,20 @@ function review_scripts() {
     $version = $_SERVER['DOCUMENT_ROOT'] === '/Applications/MAMP/htdocs' ? time() : '0.0.1';
     
     // WordPress REST API App
-    // if ( is_front_page() ) {
-    //     wp_enqueue_script( 'review-main', get_stylesheet_directory_uri() . '/js/dist/script.js', array(), $version, $loadInFooter );
+    if ( is_front_page() ) {
+        wp_enqueue_script( 'review-main', get_stylesheet_directory_uri() . '/js/dist/script.js', array(), $version, $loadInFooter );
 
-    //     wp_localize_script( 'review-main', 'wpSettings', array(
-    //         'root' => esc_url_raw( rest_url() ),
-    //         'nonce' => wp_create_nonce( 'wp_rest' ),
-    //     ));
-    // } else {
-    //     wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );
-    // }
+        wp_localize_script( 'review-main', 'wpSettings', array(
+            'root' => esc_url_raw( rest_url() ),
+            'nonce' => wp_create_nonce( 'wp_rest' ),
+        ));
+    } else {
+        wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );
+    }
     
     // Normal WordPress
-    wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );
-    wp_enqueue_script( 'review-nonapi', get_stylesheet_directory_uri() . '/include/js/script.js', array('jquery'), $version, $loadInFooter );
+    // wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );
+    // wp_enqueue_script( 'review-nonapi', get_stylesheet_directory_uri() . '/include/js/script.js', array('jquery'), $version, $loadInFooter );
 
 }
 add_action( 'wp_enqueue_scripts', 'review_scripts' );

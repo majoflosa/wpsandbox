@@ -19,7 +19,9 @@ export default class BaseComponent {
 
     init() {}
 
-    onInit() {}
+    onInit() {
+        console.log( 'BaseComponent init' );
+    }
 
     contentLoaded( $element ) {
         this.cacheRouterLinks( $element );
@@ -45,6 +47,6 @@ export default class BaseComponent {
         event.preventDefault();
 
         const { route, component, endpoint } = event.target.dataset;
-        this.props.router.setRoute( route, component, endpoint );
+        this.props.router.setRoute( route );
     }
 }

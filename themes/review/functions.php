@@ -63,6 +63,64 @@ function rev_widget_areas_init() {
 }
 add_action( 'widgets_init', 'rev_widget_areas_init' );
 
+
+
+function review_list_all_links() {
+
+    // include "wp-load.php";
+
+    $posts = new WP_Query('post_type=any&posts_per_page=-1&post_status=publish');
+    $posts = $posts->posts;
+    $links = array();
+
+    // header('Content-type:text/plain');
+    foreach($posts as $post) {
+        switch ($post->post_type) {
+            case 'revision':
+            case 'nav_menu_item':
+                break;
+            case 'page':
+                $link = array(
+                    'url' => get_page_link($post->ID),
+                    // 'slug' => $post->post_slug,
+                    'type' => $post->post_type,
+                    'id' => $post->ID
+                );
+                break;
+            case 'post':
+                $link = array(
+                    'url' => get_permalink($post->ID),
+                    // 'slug' => $post->post_slug,
+                    'type' => $post->post_type,
+                    'id' => $post->ID
+                );
+                break;
+            case 'attachment':
+                $link = array(
+                    'url' => get_attachment_link($post->ID),
+                    // 'slug' => $post->post_slug,
+                    'type' => $post->post_type,
+                    'id' => $post->ID
+                );
+                break;
+            default:
+                $link = array(
+                    'url' => get_post_permalink($post->ID),
+                    // 'slug' => $post->post_slug,
+                    'type' => $post->post_type,
+                    'id' => $post->ID
+                );
+                break;
+        }
+        // echo "\n{$permalink}";
+        // echo "\n{$post->post_type}\t{$permalink}\t{$post->post_title}";
+        $links[] = $link;
+    }
+
+    return $links;
+
+}
+
 /**
  * Scripts and styles
  */
@@ -71,16 +129,17 @@ function review_scripts() {
     $version = $_SERVER['DOCUMENT_ROOT'] === '/Applications/MAMP/htdocs' ? time() : '0.0.1';
     
     // WordPress REST API App
-    if ( is_front_page() ) {
-        wp_enqueue_script( 'review-main', get_stylesheet_directory_uri() . '/js/dist/script.js', array(), $version, $loadInFooter );
+    // if ( is_front_page() ) {
+    wp_enqueue_script( 'review-main', get_stylesheet_directory_uri() . '/js/dist/script.js', array(), $version, $loadInFooter );
 
-        wp_localize_script( 'review-main', 'wpSettings', array(
-            'root' => esc_url_raw( rest_url() ),
-            'nonce' => wp_create_nonce( 'wp_rest' ),
-        ));
-    } else {
-        wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );
-    }
+    wp_localize_script( 'review-main', 'wpSettings', array(
+        'root' => esc_url_raw( rest_url() ),
+        'nonce' => wp_create_nonce( 'wp_rest' ),
+        'routes' => review_list_all_links(),
+    ));
+    // } else {
+        // wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );
+    // }
     
     // Normal WordPress
     // wp_enqueue_style( 'review-style', get_stylesheet_uri(), array(), $version );

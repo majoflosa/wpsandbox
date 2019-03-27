@@ -1,6 +1,7 @@
 export default class Rest {
     constructor( baseUrl ) {
         this.baseUrl = baseUrl;
+        this.nonce = wpSettings.nonce || null;
 
         this.getPosts = this.getPosts.bind( this );
         this.getPost = this.getPost.bind( this );
@@ -39,8 +40,6 @@ export default class Rest {
                 return err;
             });
     }
-
-    
 
     async getPost( args ) {
         const baseRoute = `posts/${args}`;

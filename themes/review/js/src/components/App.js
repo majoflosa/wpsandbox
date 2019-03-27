@@ -10,9 +10,10 @@ export default class App {
 
         // this.initialComponent = this.router.getRoute() === 'home' ? 'Posts' : 'Not Found';
         // this.initialEndpoint = this.router.getRoute() === 'home' ? 'posts' : null;
-        // this.router.setRoute( this.router.getRoute(), this.initialComponent, this.initialEndpoint );
+        console.log( this.router.getRoute() );
+        this.router.setRoute( this.router.getRoute() );
 
         // SANDBOX Component
-        this.router.setRoute( 'sandbox', 'Sandbox', '' );
+        // this.router.setRoute( 'sandbox', 'Sandbox', '' );
     }
 }

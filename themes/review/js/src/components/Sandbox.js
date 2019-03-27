@@ -4,25 +4,28 @@ import BaseComponent from './BaseComponent';
 export default class Sandbox extends BaseComponent {
     constructor( props ) {
         super( props );
-        this.element = document.querySelector( '#primary' );
         this.data = null;
         this.baseUrl = 'http://localhost:8888/wpsandbox/wp-json/wp/v2';
-
+        // this.element = document.querySelector( '#primary' );
+        
         // this.authenticate = this.authenticate.bind( this );
         this.fetchData = this.fetchData.bind( this );
         this.postData = this.postData.bind( this );
         this.render = this.render.bind( this );
-
+        
         // this.authenticate();
         // this.fetchData();
         // this.postData();
-        
-        this.render();
-        this.cacheDom();
-        this.bindEvents();
     }
     
     onInit() {
+        console.log( 'Sandbox init' );
+        this.element = document.querySelector( '#primary' );
+
+        this.render();
+
+        this.cacheDom();
+        this.bindEvents();
     }
 
     cacheDom() {
@@ -30,7 +33,7 @@ export default class Sandbox extends BaseComponent {
     }
 
     bindEvents() {
-        this.DOM.button.addEventListener( 'click', () => this.postData() );
+        this.DOM.button.addEventListener( 'click', () => this.fetchData() );
     }
 
     async fetchData() {
@@ -68,6 +71,7 @@ export default class Sandbox extends BaseComponent {
     }
 
     render() {
+        console.log( 'sandbox render' );
         this.element.innerHTML = `
             <h1>Sandbox</h1>
             <button id="create-post">Create Post</button>

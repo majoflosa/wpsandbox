@@ -110,10 +110,10 @@ var App = function App() {
   this.element = document.querySelector('#primary');
   this.nav = new _Nav__WEBPACK_IMPORTED_MODULE_1__["default"](); // this.initialComponent = this.router.getRoute() === 'home' ? 'Posts' : 'Not Found';
   // this.initialEndpoint = this.router.getRoute() === 'home' ? 'posts' : null;
-  // this.router.setRoute( this.router.getRoute(), this.initialComponent, this.initialEndpoint );
-  // SANDBOX Component
 
-  this.router.setRoute('sandbox', 'Sandbox', '');
+  console.log(this.router.getRoute());
+  this.router.setRoute(this.router.getRoute()); // SANDBOX Component
+  // this.router.setRoute( 'sandbox', 'Sandbox', '' );
 };
 
 
@@ -174,7 +174,9 @@ function () {
     value: function init() {}
   }, {
     key: "onInit",
-    value: function onInit() {}
+    value: function onInit() {
+      console.log('BaseComponent init');
+    }
   }, {
     key: "contentLoaded",
     value: function contentLoaded($element) {
@@ -211,7 +213,7 @@ function () {
           route = _event$target$dataset.route,
           component = _event$target$dataset.component,
           endpoint = _event$target$dataset.endpoint;
-      this.props.router.setRoute(route, component, endpoint);
+      this.props.router.setRoute(route);
     }
   }]);
 
@@ -593,9 +595,9 @@ function (_BaseComponent) {
     _classCallCheck(this, Sandbox);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Sandbox).call(this, props));
-    _this.element = document.querySelector('#primary');
     _this.data = null;
-    _this.baseUrl = 'http://localhost:8888/wpsandbox/wp-json/wp/v2'; // this.authenticate = this.authenticate.bind( this );
+    _this.baseUrl = 'http://localhost:8888/wpsandbox/wp-json/wp/v2'; // this.element = document.querySelector( '#primary' );
+    // this.authenticate = this.authenticate.bind( this );
 
     _this.fetchData = _this.fetchData.bind(_assertThisInitialized(_this));
     _this.postData = _this.postData.bind(_assertThisInitialized(_this));
@@ -603,18 +605,18 @@ function (_BaseComponent) {
     // this.fetchData();
     // this.postData();
 
-    _this.render();
-
-    _this.cacheDom();
-
-    _this.bindEvents();
-
     return _this;
   }
 
   _createClass(Sandbox, [{
     key: "onInit",
-    value: function onInit() {}
+    value: function onInit() {
+      console.log('Sandbox init');
+      this.element = document.querySelector('#primary');
+      this.render();
+      this.cacheDom();
+      this.bindEvents();
+    }
   }, {
     key: "cacheDom",
     value: function cacheDom() {
@@ -626,7 +628,7 @@ function (_BaseComponent) {
       var _this2 = this;
 
       this.DOM.button.addEventListener('click', function () {
-        return _this2.postData();
+        return _this2.fetchData();
       });
     }
   }, {
@@ -731,6 +733,7 @@ function (_BaseComponent) {
   }, {
     key: "render",
     value: function render() {
+      console.log('sandbox render');
       this.element.innerHTML = "\n            <h1>Sandbox</h1>\n            <button id=\"create-post\">Create Post</button>\n        ";
     }
   }]);
@@ -872,6 +875,7 @@ function () {
     _classCallCheck(this, Rest);
 
     this.baseUrl = baseUrl;
+    this.nonce = wpSettings.nonce || null;
     this.getPosts = this.getPosts.bind(this);
     this.getPost = this.getPost.bind(this);
     this.createPost = this.createPost.bind(this);
@@ -1118,14 +1122,32 @@ function () {
 
     this.baseUrl = 'http://localhost:8888/wpsandbox';
     this.location = window.location;
-    this.currentView = 'Posts';
-    this.views = {
-      'Sandbox': _components_Sandbox__WEBPACK_IMPORTED_MODULE_0__["default"],
-      'Posts': _components_Posts__WEBPACK_IMPORTED_MODULE_1__["default"],
-      'SinglePost': _components_SinglePost__WEBPACK_IMPORTED_MODULE_2__["default"],
-      'Page': _components_Page__WEBPACK_IMPORTED_MODULE_3__["default"],
-      'Not Found': _components_Error404__WEBPACK_IMPORTED_MODULE_4__["default"]
+    this.routes = {
+      '/': {
+        component: _components_Posts__WEBPACK_IMPORTED_MODULE_1__["default"],
+        id: null,
+        query: null
+      }
     };
+    wpSettings.routes.forEach(function (route) {
+      var slug = route.url.replace(_this.baseUrl, ''); // NOTE: Custom post types, attachments, and others are not being considered here
+
+      var component = route.type === 'post' ? _components_SinglePost__WEBPACK_IMPORTED_MODULE_2__["default"] : _components_Page__WEBPACK_IMPORTED_MODULE_3__["default"];
+      _this.routes[slug] = {
+        component: component,
+        id: route.id,
+        query: null
+      };
+    });
+    console.log(this.routes); // this.currentView = 'Posts';
+    // this.views = {
+    //     'Sandbox': Sandbox,
+    //     'Posts': Posts,
+    //     'SinglePost': SinglePost,
+    //     'Page': Page,
+    //     'Not Found': Error404
+    // };
+
     this.browsingHistoryMap = {};
     this.setRoute = this.setRoute.bind(this);
     this.getRoute = this.getRoute.bind(this);
@@ -1139,30 +1161,34 @@ function () {
 
   _createClass(Router, [{
     key: "setRoute",
-    value: function setRoute(route) {
-      var component = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Not Found';
-      var endpoint = arguments.length > 2 ? arguments[2] : undefined;
-      if (!this.browsingHistoryMap[route]) window.history.pushState({
-        endpoint: endpoint
-      }, '', "".concat(this.baseUrl, "/#/").concat(route));
-      this.location.hash = "/".concat(route);
-      this.setView(component, endpoint);
-      this.browsingHistoryMap[route] = component;
+    value: function setRoute() {
+      var route = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '/';
+      // if ( !this.browsingHistoryMap[route] )
+      window.history.pushState( // {endpoint: endpoint}, 
+      {}, '', "".concat(this.baseUrl).concat(route === '/' ? route : '/' + route)); // this.location.hash = `/${route}`;
+      // this.location.pathname = `/wpsandbox${route}`;
+
+      this.setView(route); // this.browsingHistoryMap[route] = component;
     }
   }, {
     key: "getRoute",
     value: function getRoute() {
-      return this.location.hash ? this.location.hash.split('#/')[1] || 'home' : 'home';
+      return this.location.path || '/'; // return this.location.hash 
+      //     ? this.location.hash.split('#/')[1] || 'home'
+      //     : 'home';
     }
   }, {
     key: "setView",
-    value: function setView(component, endpoint) {
+    value: function setView(route) {
+      route = route === '/' ? route : "/".concat(route, "/");
       var props = {
         router: this,
-        endpoint: endpoint
+        endpoint: this.routes[route].id
       };
-      this.currentView = component;
-      this.currentViewInstance = new this.views[component](props); // this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
+      console.log(route); // this.currentView = component;
+
+      this.currentViewInstance = new this.routes[route].component(props);
+      this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
     }
   }, {
     key: "getView",
@@ -1172,12 +1198,18 @@ function () {
   }, {
     key: "handleBrowserNav",
     value: function handleBrowserNav(event) {
-      var route = event.path[0].location.hash.split('#/')[1];
+      // const route = event.path[0].location.hash.split('#/')[1];
+      // const props = { router: this, endpoint: event.path[0].history.state.endpoint };
+      // this.setRoute( route, this.browsingHistoryMap[route], props );
+      var location = event.path[0].location;
+      var route = "".concat(location.href.replace(this.baseUrl, ''));
+      console.log(route);
       var props = {
         router: this,
-        endpoint: event.path[0].history.state.endpoint
+        endpoint: this.routes[route].id
       };
-      this.setRoute(route, this.browsingHistoryMap[route], props);
+      this.currentViewInstance = new this.routes[route].component(props);
+      this.currentViewInstance.element.innerHTML = '<h1>Loading new page...</h1>';
     }
   }]);
 
@@ -10209,7 +10241,7 @@ module.exports = __webpack_require__(/*! ../modules/_core */ "./node_modules/@ba
 
 exports = module.exports = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "/* Theme Name: Review Theme */\nbody {\n  background: #f5f5f5;\n  color: #555555;\n  font-family: sans-serif;\n  margin: 0; }\n\n#page-wrap {\n  position: relative; }\n\n.template-label {\n  position: absolute;\n  top: -20px;\n  right: 10px;\n  background: #dddddd;\n  padding: 3px 15px; }\n\n.primary {\n  margin: 30px auto;\n  width: 90%;\n  max-width: 960px; }\n\n.site-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  background: #333333;\n  color: #ffffff;\n  padding: 0 10px; }\n  .site-header a {\n    color: inherit;\n    text-decoration: none; }\n  .site-header__title {\n    display: flex;\n    align-items: center; }\n  .site-header__logo-wrap {\n    margin-right: 8px; }\n    .site-header__logo-wrap img {\n      height: 40px;\n      width: auto;\n      display: block; }\n\n.site-header__nav .responsive-nav-toggle {\n  display: none; }\n\n.site-header__nav-links {\n  list-style: none;\n  display: flex; }\n  .site-header__nav-links a {\n    display: inline-block;\n    margin: 0 10px; }\n\n.entry {\n  background: #ffffff;\n  padding: 30px;\n  box-sizing: border-box;\n  margin: 0 auto 50px; }\n", ""]);
+exports.push([module.i, "/* Theme Name: Review Theme */\nbody {\n  background: #f5f5f5;\n  color: #555555;\n  font-family: sans-serif;\n  margin: 0; }\n\n.screen-reader-text {\n  display: none; }\n\n#page-wrap {\n  position: relative; }\n\n.template-label {\n  position: absolute;\n  top: -20px;\n  right: 10px;\n  background: #dddddd;\n  padding: 3px 15px; }\n\n.primary {\n  margin: 30px auto;\n  width: 90%;\n  max-width: 960px; }\n\n.site-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  background: #333333;\n  color: #ffffff;\n  padding: 0 10px; }\n  .site-header a {\n    color: inherit;\n    text-decoration: none; }\n  .site-header__title {\n    display: flex;\n    align-items: center; }\n  .site-header__logo-wrap {\n    margin-right: 8px; }\n    .site-header__logo-wrap img {\n      height: 40px;\n      width: auto;\n      display: block; }\n\n.site-header__nav .responsive-nav-toggle {\n  display: none; }\n\n.site-header__nav-links {\n  list-style: none;\n  display: flex; }\n  .site-header__nav-links a {\n    display: inline-block;\n    margin: 0 10px; }\n\n.entry {\n  background: #ffffff;\n  padding: 30px;\n  box-sizing: border-box;\n  margin: 0 auto 50px; }\n", ""]);
 
 
 

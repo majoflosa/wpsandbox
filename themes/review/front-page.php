@@ -7,6 +7,9 @@
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?> >
+
+<?php // var_dump( review_list_all_links() ); ?>
+
     <header class="site-header">
         <h1 class="site-header__title <?php if ( !has_custom_logo() ) echo 'no-logo'; ?>">
             <span class="site-header__logo-wrap">

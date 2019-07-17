@@ -5,28 +5,18 @@
  */
 function rev_setup() {
     add_theme_support( 'post-thumbnails' );
-
     // to support all formats, get_post_format_slugs() returns all post formats
     // otherwise pass array of specific post formats
     add_theme_support( 'post-formats', get_post_format_slugs() );
-
     add_theme_support( 'html5', array( 'comment-list', 'comment-form', 'search-form', 'gallery', 'caption' ) );
-
     add_theme_support( 'custom-logo' );
-
     add_theme_support( 'custom-header-uploads' );
-    
     add_theme_support( 'custom-header' );
-    
     add_theme_support( 'custom-background' );
-    
     add_theme_support( 'title-tag' );
-
     add_theme_support( 'automatic-feed-links' );
-
     add_theme_support( 'customize-selective-refresh-widgets' );
-
-    // add_theme_support( 'starter-content' );
+     // add_theme_support( 'starter-content' );
 
     // Block features
     add_theme_support( 'wp-block-styles' );
@@ -34,7 +24,7 @@ function rev_setup() {
     add_theme_support( 'align-wide' ); // enable wide- and full- alignments on back-end-
     add_theme_support( 'editor-color-palette', array(
         array(
-            'name' => 'Color Name',
+            'name' => 'Orangy color',
             'slug' => 'color-slug',
             'color' => '#ff5511'
         ),
@@ -42,7 +32,8 @@ function rev_setup() {
     ) );
 
     register_nav_menus( array(
-        'main_nav' => 'Main Navigation'
+        'main_nav' => 'Main Navigation',
+        'secondary_nav' => 'Secondary Navigation'
     ) );
 }
 add_action( 'after_setup_theme', 'rev_setup' );
@@ -113,3 +104,24 @@ function someFilterCallback( $string, $arg1 ) {
 //     // return ;
 // }
 // add_action( 'all', 'all_hooks' );
+
+/* Add widget to dashboard */
+function rev_dashboard_widget() {
+    // string, an identifying slug for your widget
+    $widget_id = 'rev_test_widget';
+    // string, display name for widget
+    $widget_name = 'Review Testing Widget';
+    // callback: string, name of function that displays widget contents
+    $callback = 'rev_test_widget_content';
+    // control_callback: string, name of function that will handle submission of and displays widget options forms
+    $control_callback = null;
+    // callback_args: array, arguments to pass into callback function
+    $callback_args = array();
+    wp_add_dashboard_widget( $widget_id, $widget_name, $callback, $control_callback, $callback_args );
+}
+add_action( 'wp_dashboard_setup', 'rev_dashboard_widget' );
+
+function rev_test_widget_content( $post ) {
+    var_dump( is_admin() );
+    echo '<p>Testing how to add a dashboard widget.</p>';
+}

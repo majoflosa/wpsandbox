@@ -2,7 +2,9 @@
 <!-- <?php // global $wp_query; ?>
 <pre><?php // print_r( $wp_query ); ?></pre> -->
 
+
 <div class="template-label"><small>index.php</small></div>
+<p><?php echo ''; ?></p>
 
 <?php // echo is_front_page() ? '<p>is front page</p>' : '<p>is not front page</p>'; ?>
 

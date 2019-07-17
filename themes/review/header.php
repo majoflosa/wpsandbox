@@ -31,8 +31,9 @@
                 'link_before'   => '',
                 'link_after'    => '',
                 'echo'          => true,
-                'depth'         => 1,
-                // 'walker'        => ???
+                'depth'         => 1, // 0 means unlimited levels
+                // a Walker object used to loop through nested nav items; see include/nav-walker-example.php
+                // 'walker'        => new My_Custom_Nav_Walker() 
                 'theme_location' => 'main_nav',
                 'items_wrap'    => '<ul class="%1$s" id="%2$s" data-custom="This is a custom attr">%3$s</ul>',
                 'item_spacing'  => 'preserve'
@@ -40,7 +41,11 @@
         ?>
         <nav id="site-header__nav" class="site-header__nav">
             <button class="responsive-nav-toggle">MENU</button>
-            <?php wp_nav_menu( $nav_args ); ?>
+            <?php 
+                if ( has_nav_menu( 'main_nav' ) ) {
+                    wp_nav_menu( $nav_args ); 
+                }
+            ?>
         </nav>
     </header>
 
